@@ -58,7 +58,7 @@ interface Preset {
 const OBSIDIAN_PRESETS: Preset[] = [
   {
     id: 'sapphire-pure',
-    name: 'Sapphire Obsidian',
+    name: 'Sapphire',
     dotsColor: '#3b82f6',
     bgColor: '#07080c',
     dotsType: 'rounded',
@@ -67,7 +67,7 @@ const OBSIDIAN_PRESETS: Preset[] = [
   },
   {
     id: 'cyan-cyber',
-    name: 'Electric Cyan',
+    name: 'Cyan',
     dotsColor: '#06b6d4',
     bgColor: '#07080c',
     dotsType: 'dots',
@@ -76,7 +76,7 @@ const OBSIDIAN_PRESETS: Preset[] = [
   },
   {
     id: 'emerald-slate',
-    name: 'Emerald Slate',
+    name: 'Emerald',
     dotsColor: '#10b981',
     bgColor: '#07080c',
     dotsType: 'classy-rounded',
@@ -85,7 +85,7 @@ const OBSIDIAN_PRESETS: Preset[] = [
   },
   {
     id: 'violet-night',
-    name: 'Deep Violet',
+    name: 'Violet',
     dotsColor: '#8b5cf6',
     bgColor: '#07080c',
     dotsType: 'rounded',
@@ -94,7 +94,7 @@ const OBSIDIAN_PRESETS: Preset[] = [
   },
   {
     id: 'amber-gold',
-    name: 'Obsidian Amber',
+    name: 'Amber',
     dotsColor: '#f59e0b',
     bgColor: '#07080c',
     dotsType: 'classy',
@@ -103,7 +103,7 @@ const OBSIDIAN_PRESETS: Preset[] = [
   },
   {
     id: 'monochrome-crisp',
-    name: 'Monochrome White',
+    name: 'Monochrome',
     dotsColor: '#f8fafc',
     bgColor: '#07080c',
     dotsType: 'square',
@@ -561,16 +561,11 @@ const App = () => {
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-xl font-extrabold tracking-tight text-white">
-                  QRForge
-                </h1>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
-                  OBSIDIAN STUDIO
-                </span>
-              </div>
+              <h1 className="text-xl font-extrabold tracking-tight text-white">
+                QRForge
+              </h1>
               <p className="text-xs text-slate-400 hidden sm:block">
-                60-30-10 Dark Architecture • 100% Privacy Engine
+                Privacy-First QR Code Generator & Scanner
               </p>
             </div>
           </div>
@@ -583,7 +578,7 @@ const App = () => {
               className="btn-secondary px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 text-emerald-400 hover:border-emerald-500/40"
             >
               <ShieldCheck className="w-4 h-4" />
-              <span className="hidden sm:inline">Why It's Private</span>
+              <span className="hidden sm:inline">Privacy & Security</span>
             </button>
 
             {/* PWA Install Button */}
@@ -1518,8 +1513,8 @@ const App = () => {
                 <ShieldCheck className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">100% Privacy Guarantee</h3>
-                <p className="text-xs text-slate-400">Zero Server Data Transfer Architecture</p>
+                <h3 className="text-lg font-bold text-white">Privacy & Security Architecture</h3>
+                <p className="text-xs text-slate-400">Zero Server Data Transfer</p>
               </div>
             </div>
 
@@ -1563,12 +1558,12 @@ const App = () => {
       <footer className="relative z-10 py-6 px-4 text-center border-t border-white/10 backdrop-blur-lg bg-[#07080c]/90 text-xs text-slate-400 no-print">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="flex items-center gap-1.5">
-            <span>QRForge Obsidian Studio</span>
+            <span>QRForge</span>
             <span>•</span>
-            <span>60-30-10 Dark Mode</span>
+            <span>Privacy-First & On-Device</span>
             <span>•</span>
             <span className="text-emerald-400 flex items-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5" /> 100% On-Device
+              <ShieldCheck className="w-3.5 h-3.5" /> Client-Side Only
             </span>
           </p>
 
