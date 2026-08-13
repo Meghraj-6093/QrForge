@@ -22,8 +22,8 @@ import {
   Calendar,
   Scan,
   History,
-  Printer, 
-  X, 
+  Printer,
+  X,
   ExternalLink,
   Trash2,
   DownloadCloud,
@@ -55,57 +55,57 @@ interface Preset {
   cornersDotType: 'dot' | 'square';
 }
 
-const OBSIDIAN_PRESETS: Preset[] = [
+const PALETTE_PRESETS: Preset[] = [
   {
-    id: 'sapphire-pure',
-    name: 'Sapphire',
-    dotsColor: '#3b82f6',
-    bgColor: '#07080c',
+    id: 'platinum-pure',
+    name: 'Platinum Highlight',
+    dotsColor: '#EEEEED',
+    bgColor: '#080705',
     dotsType: 'rounded',
     cornersSquareType: 'extra-rounded',
     cornersDotType: 'dot',
   },
   {
-    id: 'cyan-cyber',
-    name: 'Cyan',
-    dotsColor: '#06b6d4',
-    bgColor: '#07080c',
+    id: 'graphite-dark',
+    name: 'Graphite Dark',
+    dotsColor: '#3A3A3A',
+    bgColor: '#080705',
     dotsType: 'dots',
     cornersSquareType: 'extra-rounded',
     cornersDotType: 'dot',
   },
   {
-    id: 'emerald-slate',
-    name: 'Emerald',
-    dotsColor: '#10b981',
-    bgColor: '#07080c',
-    dotsType: 'classy-rounded',
-    cornersSquareType: 'extra-rounded',
-    cornersDotType: 'dot',
-  },
-  {
-    id: 'violet-night',
-    name: 'Violet',
-    dotsColor: '#8b5cf6',
-    bgColor: '#07080c',
+    id: 'inverted-platinum',
+    name: 'Inverted Platinum',
+    dotsColor: '#080705',
+    bgColor: '#EEEEED',
     dotsType: 'rounded',
     cornersSquareType: 'extra-rounded',
     cornersDotType: 'dot',
   },
   {
-    id: 'amber-gold',
-    name: 'Amber',
-    dotsColor: '#f59e0b',
-    bgColor: '#07080c',
-    dotsType: 'classy',
-    cornersSquareType: 'square',
-    cornersDotType: 'square',
+    id: 'sapphire-accent',
+    name: 'Sapphire Accent',
+    dotsColor: '#3b82f6',
+    bgColor: '#080705',
+    dotsType: 'rounded',
+    cornersSquareType: 'extra-rounded',
+    cornersDotType: 'dot',
+  },
+  {
+    id: 'emerald-accent',
+    name: 'Emerald Accent',
+    dotsColor: '#10b981',
+    bgColor: '#080705',
+    dotsType: 'classy-rounded',
+    cornersSquareType: 'extra-rounded',
+    cornersDotType: 'dot',
   },
   {
     id: 'monochrome-crisp',
-    name: 'Monochrome',
-    dotsColor: '#f8fafc',
-    bgColor: '#07080c',
+    name: 'Pure Monochrome',
+    dotsColor: '#ffffff',
+    bgColor: '#080705',
     dotsType: 'square',
     cornersSquareType: 'square',
     cornersDotType: 'square',
@@ -157,18 +157,18 @@ const App = () => {
   const [waNumber, setWaNumber] = useState('');
   const [waMessage, setWaMessage] = useState('');
 
-  // QR Styling Options (60-30-10 Rule)
+  // QR Styling Options (#080705 Black, #3A3A3A Graphite, #EEEEED Platinum)
   const [qrSize, setQrSize] = useState<number>(320);
   const [exportSize, setExportSize] = useState<number>(1024);
   const [qrMargin, setQrMargin] = useState<number>(10);
-  const [dotsColor, setDotsColor] = useState<string>('#3b82f6');
-  const [bgColor, setBgColor] = useState<string>('#07080c');
+  const [dotsColor, setDotsColor] = useState<string>('#EEEEED');
+  const [bgColor, setBgColor] = useState<string>('#080705');
   const [isTransparentBg, setIsTransparentBg] = useState<boolean>(false);
   const [dotsType, setDotsType] = useState<'rounded' | 'dots' | 'classy' | 'classy-rounded' | 'square'>('rounded');
   const [cornersSquareType, setCornersSquareType] = useState<'extra-rounded' | 'square' | 'dot'>('extra-rounded');
   const [cornersDotType, setCornersDotType] = useState<'dot' | 'square'>('dot');
-  const [cornersSquareColor, setCornersSquareColor] = useState<string>('#3b82f6');
-  const [cornersDotColor, setCornersDotColor] = useState<string>('#3b82f6');
+  const [cornersSquareColor, setCornersSquareColor] = useState<string>('#EEEEED');
+  const [cornersDotColor, setCornersDotColor] = useState<string>('#EEEEED');
   const [errorCorrection, setErrorCorrection] = useState<'L' | 'M' | 'Q' | 'H'>('M');
 
   // Logo State
@@ -410,14 +410,13 @@ const App = () => {
             try {
               await navigator.share({
                 title: 'QRForge Code',
-                text: 'Generated with QRForge Privacy-First Studio',
+                text: 'Generated with QRForge',
                 files: [file],
               });
             } catch (err) {
               console.log('Share canceled or failed', err);
             }
           } else {
-            // Fallback: Copy link
             navigator.clipboard.writeText(getEncodedData());
             alert('Web Share API not supported on this device. Data copied to clipboard!');
           }
@@ -538,7 +537,7 @@ const App = () => {
     window.print();
   };
 
-  // Apply Obsidian Preset
+  // Apply Color Palette Preset
   const applyPreset = (preset: Preset) => {
     setDotsColor(preset.dotsColor);
     setCornersSquareColor(preset.dotsColor);
@@ -551,21 +550,21 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen obsidian-grid-bg text-slate-100 flex flex-col justify-between selection:bg-blue-500/30">
+    <div className="min-h-screen palette-bg text-[#EEEEED] flex flex-col justify-between selection:bg-white/20">
       
       {/* Header Container */}
-      <header className="sticky top-0 z-40 px-4 py-4 backdrop-blur-2xl bg-[#07080c]/80 border-b border-white/10 no-print">
+      <header className="sticky top-0 z-40 px-4 py-4 backdrop-blur-2xl bg-[#080705]/90 border-b border-[#3A3A3A] no-print">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl btn-accent flex items-center justify-center shadow-lg shadow-blue-500/25">
-              <Sparkles className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 rounded-2xl btn-platinum flex items-center justify-center shadow-lg">
+              <Sparkles className="w-5 h-5 text-[#080705]" />
             </div>
             <div>
-              <h1 className="text-xl font-extrabold tracking-tight text-white">
+              <h1 className="text-xl font-extrabold tracking-tight text-[#EEEEED]">
                 QRForge
               </h1>
-              <p className="text-xs text-slate-400 hidden sm:block">
-                Privacy-First QR Code Generator & Scanner
+              <p className="text-xs text-[#a3a3a3] hidden sm:block">
+                Privacy-First QR Code Studio
               </p>
             </div>
           </div>
@@ -575,7 +574,7 @@ const App = () => {
             {/* Privacy Assurance Trigger */}
             <button
               onClick={() => setShowPrivacyModal(true)}
-              className="btn-secondary px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 text-emerald-400 hover:border-emerald-500/40"
+              className="btn-graphite px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 text-emerald-400 hover:border-emerald-500/40"
             >
               <ShieldCheck className="w-4 h-4" />
               <span className="hidden sm:inline">Privacy & Security</span>
@@ -585,9 +584,9 @@ const App = () => {
             {deferredInstallPrompt && !isAppInstalled && (
               <button
                 onClick={handleInstallApp}
-                className="btn-accent px-3.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 animate-pulse"
+                className="btn-platinum px-3.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5"
               >
-                <DownloadCloud className="w-4 h-4" />
+                <DownloadCloud className="w-4 h-4 text-[#080705]" />
                 <span>Install App</span>
               </button>
             )}
@@ -595,9 +594,9 @@ const App = () => {
         </div>
       </header>
 
-      {/* Primary Studio View Selector */}
+      {/* Primary View Selector */}
       <div className="max-w-7xl w-full mx-auto px-4 pt-6 no-print">
-        <div className="flex items-center justify-between border-b border-white/10 pb-4">
+        <div className="flex items-center justify-between border-b border-[#3A3A3A] pb-4">
           <div className="flex gap-2">
             {[
               { id: 'create', label: 'QR Creator', icon: Sparkles },
@@ -611,7 +610,7 @@ const App = () => {
                   key={tab.id}
                   onClick={() => setActiveView(tab.id as MainView)}
                   className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all ${
-                    isActive ? 'obsidian-pill-active' : 'obsidian-pill'
+                    isActive ? 'graphite-pill-active' : 'graphite-pill'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -624,16 +623,16 @@ const App = () => {
           {activeView === 'create' && (
             <button
               onClick={handlePrint}
-              className="btn-secondary px-3 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 hidden sm:flex"
+              className="btn-graphite px-3 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 hidden sm:flex"
             >
-              <Printer className="w-3.5 h-3.5 text-slate-400" />
+              <Printer className="w-3.5 h-3.5 text-[#a3a3a3]" />
               <span>Print Card</span>
             </button>
           )}
         </div>
       </div>
 
-      {/* Main Studio Body */}
+      {/* Main Body */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-6 relative z-10">
         
         {/* VIEW 1: QR Creator */}
@@ -644,9 +643,9 @@ const App = () => {
             <div className="lg:col-span-7 space-y-6">
               
               {/* Content Type Selector */}
-              <div className="obsidian-card rounded-3xl p-5 space-y-5">
+              <div className="graphite-card rounded-3xl p-5 space-y-5">
                 <div>
-                  <label className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 block">
+                  <label className="text-xs font-bold uppercase tracking-wider text-[#a3a3a3] mb-3 block">
                     Select Content Type
                   </label>
                   <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
@@ -668,11 +667,11 @@ const App = () => {
                           onClick={() => setContentType(item.id as ContentType)}
                           className={`flex flex-col items-center justify-center p-2.5 rounded-2xl text-xs font-semibold transition-all ${
                             isActive
-                              ? 'obsidian-pill-active scale-105'
-                              : 'obsidian-pill'
+                              ? 'graphite-pill-active scale-105'
+                              : 'graphite-pill'
                           }`}
                         >
-                          <Icon className={`w-4 h-4 mb-1 ${isActive ? 'text-blue-400' : 'text-slate-400'}`} />
+                          <Icon className={`w-4 h-4 mb-1 ${isActive ? 'text-[#080705]' : 'text-[#a3a3a3]'}`} />
                           <span>{item.label}</span>
                         </button>
                       );
@@ -685,8 +684,8 @@ const App = () => {
                   {contentType === 'url' && (
                     <div>
                       <div className="flex justify-between items-center mb-1.5">
-                        <label className="text-xs font-medium text-slate-300 block">Target Website Link</label>
-                        <span className="text-[10px] text-slate-400">{rawText.length} characters</span>
+                        <label className="text-xs font-medium text-[#EEEEED] block">Target Website Link</label>
+                        <span className="text-[10px] text-[#a3a3a3]">{rawText.length} characters</span>
                       </div>
                       <div className="flex gap-2">
                         <input
@@ -694,11 +693,11 @@ const App = () => {
                           value={rawText}
                           onChange={(e) => setRawText(e.target.value)}
                           placeholder="https://yourwebsite.com"
-                          className="obsidian-input flex-1 px-4 py-3 rounded-2xl text-sm"
+                          className="graphite-input flex-1 px-4 py-3 rounded-2xl text-sm"
                         />
                         <button
                           onClick={handleCopyLink}
-                          className="btn-secondary px-4 py-3 rounded-2xl text-xs font-semibold flex items-center gap-1.5"
+                          className="btn-graphite px-4 py-3 rounded-2xl text-xs font-semibold flex items-center gap-1.5"
                         >
                           {copiedState ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
                           <span>{copiedState ? 'Copied' : 'Copy'}</span>
@@ -710,15 +709,15 @@ const App = () => {
                   {contentType === 'text' && (
                     <div>
                       <div className="flex justify-between items-center mb-1.5">
-                        <label className="text-xs font-medium text-slate-300 block">Plain Text Message</label>
-                        <span className="text-[10px] text-slate-400">{rawText.length} characters</span>
+                        <label className="text-xs font-medium text-[#EEEEED] block">Plain Text Message</label>
+                        <span className="text-[10px] text-[#a3a3a3]">{rawText.length} characters</span>
                       </div>
                       <textarea
                         rows={3}
                         value={rawText}
                         onChange={(e) => setRawText(e.target.value)}
-                        placeholder="Type any message, memo, or secret code..."
-                        className="obsidian-input w-full px-4 py-3 rounded-2xl text-sm resize-none"
+                        placeholder="Type any message, memo, or code..."
+                        className="graphite-input w-full px-4 py-3 rounded-2xl text-sm resize-none"
                       />
                     </div>
                   )}
@@ -726,35 +725,35 @@ const App = () => {
                   {contentType === 'wifi' && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                       <div className="sm:col-span-2">
-                        <label className="text-xs font-medium text-slate-300 mb-1 block">Network Name (SSID)</label>
+                        <label className="text-xs font-medium text-[#EEEEED] mb-1 block">Network Name (SSID)</label>
                         <input
                           type="text"
                           value={wifiSSID}
                           onChange={(e) => setWifiSSID(e.target.value)}
                           placeholder="Home_WiFi_5G"
-                          className="obsidian-input w-full px-4 py-2.5 rounded-2xl text-sm"
+                          className="graphite-input w-full px-4 py-2.5 rounded-2xl text-sm"
                         />
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-slate-300 mb-1 block">Password</label>
+                        <label className="text-xs font-medium text-[#EEEEED] mb-1 block">Password</label>
                         <input
                           type="password"
                           value={wifiPassword}
                           onChange={(e) => setWifiPassword(e.target.value)}
                           placeholder="Network Password"
-                          className="obsidian-input w-full px-4 py-2.5 rounded-2xl text-sm"
+                          className="graphite-input w-full px-4 py-2.5 rounded-2xl text-sm"
                         />
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-slate-300 mb-1 block">Security</label>
+                        <label className="text-xs font-medium text-[#EEEEED] mb-1 block">Security</label>
                         <select
                           value={wifiEncryption}
                           onChange={(e) => setWifiEncryption(e.target.value as any)}
-                          className="obsidian-input w-full px-4 py-2.5 rounded-2xl text-sm"
+                          className="graphite-input w-full px-4 py-2.5 rounded-2xl text-sm"
                         >
-                          <option value="WPA" className="bg-slate-900 text-white">WPA / WPA2 / WPA3</option>
-                          <option value="WEP" className="bg-slate-900 text-white">WEP</option>
-                          <option value="nopass" className="bg-slate-900 text-white">Open (No Password)</option>
+                          <option value="WPA" className="bg-[#080705] text-[#EEEEED]">WPA / WPA2 / WPA3</option>
+                          <option value="WEP" className="bg-[#080705] text-[#EEEEED]">WEP</option>
+                          <option value="nopass" className="bg-[#080705] text-[#EEEEED]">Open (No Password)</option>
                         </select>
                       </div>
                       <div className="sm:col-span-2 flex items-center gap-2 pt-1">
@@ -763,9 +762,9 @@ const App = () => {
                           type="checkbox"
                           checked={wifiHidden}
                           onChange={(e) => setWifiHidden(e.target.checked)}
-                          className="rounded border-slate-700 bg-slate-800 text-blue-500"
+                          className="rounded border-[#3A3A3A] bg-[#080705] text-[#EEEEED]"
                         />
-                        <label htmlFor="wifi-hidden-chk" className="text-xs text-slate-300 cursor-pointer">Hidden SSID Network</label>
+                        <label htmlFor="wifi-hidden-chk" className="text-xs text-[#EEEEED] cursor-pointer">Hidden SSID Network</label>
                       </div>
                     </div>
                   )}
@@ -773,63 +772,63 @@ const App = () => {
                   {contentType === 'vcard' && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="text-xs font-medium text-slate-300 mb-1 block">First Name</label>
+                        <label className="text-xs font-medium text-[#EEEEED] mb-1 block">First Name</label>
                         <input
                           type="text"
                           value={vcardFirstName}
                           onChange={(e) => setVcardFirstName(e.target.value)}
                           placeholder="Alex"
-                          className="obsidian-input w-full px-3.5 py-2 rounded-2xl text-sm"
+                          className="graphite-input w-full px-3.5 py-2 rounded-2xl text-sm"
                         />
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-slate-300 mb-1 block">Last Name</label>
+                        <label className="text-xs font-medium text-[#EEEEED] mb-1 block">Last Name</label>
                         <input
                           type="text"
                           value={vcardLastName}
                           onChange={(e) => setVcardLastName(e.target.value)}
                           placeholder="Morgan"
-                          className="obsidian-input w-full px-3.5 py-2 rounded-2xl text-sm"
+                          className="graphite-input w-full px-3.5 py-2 rounded-2xl text-sm"
                         />
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-slate-300 mb-1 block">Phone Number</label>
+                        <label className="text-xs font-medium text-[#EEEEED] mb-1 block">Phone Number</label>
                         <input
                           type="tel"
                           value={vcardPhone}
                           onChange={(e) => setVcardPhone(e.target.value)}
                           placeholder="+1 (555) 019-2834"
-                          className="obsidian-input w-full px-3.5 py-2 rounded-2xl text-sm"
+                          className="graphite-input w-full px-3.5 py-2 rounded-2xl text-sm"
                         />
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-slate-300 mb-1 block">Email</label>
+                        <label className="text-xs font-medium text-[#EEEEED] mb-1 block">Email</label>
                         <input
                           type="email"
                           value={vcardEmail}
                           onChange={(e) => setVcardEmail(e.target.value)}
                           placeholder="alex@company.com"
-                          className="obsidian-input w-full px-3.5 py-2 rounded-2xl text-sm"
+                          className="graphite-input w-full px-3.5 py-2 rounded-2xl text-sm"
                         />
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-slate-300 mb-1 block">Company</label>
+                        <label className="text-xs font-medium text-[#EEEEED] mb-1 block">Company</label>
                         <input
                           type="text"
                           value={vcardCompany}
                           onChange={(e) => setVcardCompany(e.target.value)}
-                          placeholder="Obsidian Corp"
-                          className="obsidian-input w-full px-3.5 py-2 rounded-2xl text-sm"
+                          placeholder="Company Inc."
+                          className="graphite-input w-full px-3.5 py-2 rounded-2xl text-sm"
                         />
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-slate-300 mb-1 block">Job Title</label>
+                        <label className="text-xs font-medium text-[#EEEEED] mb-1 block">Job Title</label>
                         <input
                           type="text"
                           value={vcardTitle}
                           onChange={(e) => setVcardTitle(e.target.value)}
-                          placeholder="Product Architect"
-                          className="obsidian-input w-full px-3.5 py-2 rounded-2xl text-sm"
+                          placeholder="Product Lead"
+                          className="graphite-input w-full px-3.5 py-2 rounded-2xl text-sm"
                         />
                       </div>
                     </div>
@@ -838,51 +837,51 @@ const App = () => {
                   {contentType === 'event' && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="sm:col-span-2">
-                        <label className="text-xs font-medium text-slate-300 mb-1 block">Event Title</label>
+                        <label className="text-xs font-medium text-[#EEEEED] mb-1 block">Event Title</label>
                         <input
                           type="text"
                           value={eventTitle}
                           onChange={(e) => setEventTitle(e.target.value)}
-                          placeholder="Product Launch Keynote"
-                          className="obsidian-input w-full px-4 py-2.5 rounded-2xl text-sm"
+                          placeholder="Product Launch"
+                          className="graphite-input w-full px-4 py-2.5 rounded-2xl text-sm"
                         />
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-slate-300 mb-1 block">Start Date/Time</label>
+                        <label className="text-xs font-medium text-[#EEEEED] mb-1 block">Start Date/Time</label>
                         <input
                           type="datetime-local"
                           value={eventStartDate}
                           onChange={(e) => setEventStartDate(e.target.value)}
-                          className="obsidian-input w-full px-3 py-2 rounded-2xl text-xs"
+                          className="graphite-input w-full px-3 py-2 rounded-2xl text-xs"
                         />
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-slate-300 mb-1 block">End Date/Time</label>
+                        <label className="text-xs font-medium text-[#EEEEED] mb-1 block">End Date/Time</label>
                         <input
                           type="datetime-local"
                           value={eventEndDate}
                           onChange={(e) => setEventEndDate(e.target.value)}
-                          className="obsidian-input w-full px-3 py-2 rounded-2xl text-xs"
+                          className="graphite-input w-full px-3 py-2 rounded-2xl text-xs"
                         />
                       </div>
                       <div className="sm:col-span-2">
-                        <label className="text-xs font-medium text-slate-300 mb-1 block">Location / Link</label>
+                        <label className="text-xs font-medium text-[#EEEEED] mb-1 block">Location / Link</label>
                         <input
                           type="text"
                           value={eventLocation}
                           onChange={(e) => setEventLocation(e.target.value)}
-                          placeholder="Main Auditorium or Zoom Link"
-                          className="obsidian-input w-full px-3.5 py-2 rounded-2xl text-sm"
+                          placeholder="Main Hall or Video Link"
+                          className="graphite-input w-full px-3.5 py-2 rounded-2xl text-sm"
                         />
                       </div>
                       <div className="sm:col-span-2">
-                        <label className="text-xs font-medium text-slate-300 mb-1 block">Event Description</label>
+                        <label className="text-xs font-medium text-[#EEEEED] mb-1 block">Event Notes</label>
                         <textarea
                           rows={2}
                           value={eventDescription}
                           onChange={(e) => setEventDescription(e.target.value)}
-                          placeholder="Event description or notes..."
-                          className="obsidian-input w-full px-3.5 py-2 rounded-2xl text-sm resize-none"
+                          placeholder="Additional details..."
+                          className="graphite-input w-full px-3.5 py-2 rounded-2xl text-sm resize-none"
                         />
                       </div>
                     </div>
@@ -891,33 +890,33 @@ const App = () => {
                   {contentType === 'email' && (
                     <div className="space-y-3">
                       <div>
-                        <label className="text-xs font-medium text-slate-300 mb-1 block">Recipient Email</label>
+                        <label className="text-xs font-medium text-[#EEEEED] mb-1 block">Recipient Email</label>
                         <input
                           type="email"
                           value={emailTo}
                           onChange={(e) => setEmailTo(e.target.value)}
-                          placeholder="support@company.com"
-                          className="obsidian-input w-full px-4 py-2.5 rounded-2xl text-sm"
+                          placeholder="contact@company.com"
+                          className="graphite-input w-full px-4 py-2.5 rounded-2xl text-sm"
                         />
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-slate-300 mb-1 block">Subject</label>
+                        <label className="text-xs font-medium text-[#EEEEED] mb-1 block">Subject</label>
                         <input
                           type="text"
                           value={emailSubject}
                           onChange={(e) => setEmailSubject(e.target.value)}
                           placeholder="Inquiry"
-                          className="obsidian-input w-full px-4 py-2 rounded-2xl text-sm"
+                          className="graphite-input w-full px-4 py-2 rounded-2xl text-sm"
                         />
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-slate-300 mb-1 block">Body Text</label>
+                        <label className="text-xs font-medium text-[#EEEEED] mb-1 block">Message Body</label>
                         <textarea
                           rows={2}
                           value={emailBody}
                           onChange={(e) => setEmailBody(e.target.value)}
                           placeholder="Write your email body..."
-                          className="obsidian-input w-full px-4 py-2 rounded-2xl text-sm resize-none"
+                          className="graphite-input w-full px-4 py-2 rounded-2xl text-sm resize-none"
                         />
                       </div>
                     </div>
@@ -925,13 +924,13 @@ const App = () => {
 
                   {contentType === 'phone' && (
                     <div>
-                      <label className="text-xs font-medium text-slate-300 mb-1.5 block">Phone Number</label>
+                      <label className="text-xs font-medium text-[#EEEEED] mb-1.5 block">Phone Number</label>
                       <input
                         type="tel"
                         value={rawText}
                         onChange={(e) => setRawText(e.target.value)}
                         placeholder="+1 (555) 123-4567"
-                        className="obsidian-input w-full px-4 py-3 rounded-2xl text-sm"
+                        className="graphite-input w-full px-4 py-3 rounded-2xl text-sm"
                       />
                     </div>
                   )}
@@ -939,23 +938,23 @@ const App = () => {
                   {contentType === 'whatsapp' && (
                     <div className="space-y-3">
                       <div>
-                        <label className="text-xs font-medium text-slate-300 mb-1 block">WhatsApp Number (with Country Code)</label>
+                        <label className="text-xs font-medium text-[#EEEEED] mb-1 block">WhatsApp Number (with Country Code)</label>
                         <input
                           type="tel"
                           value={waNumber}
                           onChange={(e) => setWaNumber(e.target.value)}
                           placeholder="15551234567"
-                          className="obsidian-input w-full px-4 py-2.5 rounded-2xl text-sm"
+                          className="graphite-input w-full px-4 py-2.5 rounded-2xl text-sm"
                         />
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-slate-300 mb-1 block">Preset Chat Message</label>
+                        <label className="text-xs font-medium text-[#EEEEED] mb-1 block">Preset Message</label>
                         <input
                           type="text"
                           value={waMessage}
                           onChange={(e) => setWaMessage(e.target.value)}
-                          placeholder="Hello, I would like to order..."
-                          className="obsidian-input w-full px-4 py-2 rounded-2xl text-sm"
+                          placeholder="Hello, I would like to inquire..."
+                          className="graphite-input w-full px-4 py-2 rounded-2xl text-sm"
                         />
                       </div>
                     </div>
@@ -963,18 +962,18 @@ const App = () => {
                 </div>
               </div>
 
-              {/* Obsidian Customization Tabs */}
-              <div className="obsidian-card rounded-3xl p-5 space-y-5">
+              {/* Customization Tabs */}
+              <div className="graphite-card rounded-3xl p-5 space-y-5">
                 
                 {/* Tab Header */}
-                <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                <div className="flex items-center justify-between border-b border-[#3A3A3A] pb-3">
                   <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
                     {[
                       { id: 'presets', label: 'Color Presets', icon: Sparkles },
                       { id: 'colors', label: 'Colors & Fill', icon: Palette },
                       { id: 'shapes', label: 'Dot Shapes', icon: Layers },
                       { id: 'logo', label: 'Logo Branding', icon: ImageIcon },
-                      { id: 'specs', label: 'Resolution & Specs', icon: Sliders },
+                      { id: 'specs', label: 'Specs & Margin', icon: Sliders },
                     ].map((tab) => {
                       const Icon = tab.icon;
                       const isActive = customizerTab === tab.id;
@@ -983,7 +982,7 @@ const App = () => {
                           key={tab.id}
                           onClick={() => setCustomizerTab(tab.id as CustomizerTab)}
                           className={`px-3.5 py-2 rounded-2xl text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap transition-all ${
-                            isActive ? 'obsidian-pill-active' : 'obsidian-pill'
+                            isActive ? 'graphite-pill-active' : 'graphite-pill'
                           }`}
                         >
                           <Icon className="w-3.5 h-3.5" />
@@ -997,14 +996,14 @@ const App = () => {
                 {/* TAB: Presets */}
                 {customizerTab === 'presets' && (
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    {OBSIDIAN_PRESETS.map((preset) => (
+                    {PALETTE_PRESETS.map((preset) => (
                       <button
                         key={preset.id}
                         onClick={() => applyPreset(preset)}
-                        className="btn-secondary p-3.5 rounded-2xl text-left flex flex-col justify-between h-22 hover:border-blue-500/40"
+                        className="btn-graphite p-3.5 rounded-2xl text-left flex flex-col justify-between h-22 hover:border-[#EEEEED]/40"
                       >
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-slate-200">
+                          <span className="text-xs font-bold text-[#EEEEED]">
                             {preset.name}
                           </span>
                           <div 
@@ -1012,7 +1011,7 @@ const App = () => {
                             style={{ backgroundColor: preset.dotsColor }}
                           />
                         </div>
-                        <span className="text-[10px] text-slate-400 capitalize">
+                        <span className="text-[10px] text-[#a3a3a3] capitalize">
                           {preset.dotsType}
                         </span>
                       </button>
@@ -1025,7 +1024,7 @@ const App = () => {
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="text-xs font-semibold text-slate-300 mb-1.5 block">Dots Accent Color</label>
+                        <label className="text-xs font-semibold text-[#EEEEED] mb-1.5 block">Dots Accent Color</label>
                         <div className="flex items-center gap-3">
                           <input
                             type="color"
@@ -1041,20 +1040,20 @@ const App = () => {
                             type="text"
                             value={dotsColor}
                             onChange={(e) => setDotsColor(e.target.value)}
-                            className="obsidian-input flex-1 px-3 py-2 rounded-xl text-xs font-mono uppercase"
+                            className="graphite-input flex-1 px-3 py-2 rounded-xl text-xs font-mono uppercase"
                           />
                         </div>
                       </div>
 
                       <div>
                         <div className="flex items-center justify-between mb-1.5">
-                          <label className="text-xs font-semibold text-slate-300">Background Color</label>
-                          <label className="flex items-center gap-1 text-xs text-slate-400 cursor-pointer">
+                          <label className="text-xs font-semibold text-[#EEEEED]">Background Color</label>
+                          <label className="flex items-center gap-1 text-xs text-[#a3a3a3] cursor-pointer">
                             <input
                               type="checkbox"
                               checked={isTransparentBg}
                               onChange={(e) => setIsTransparentBg(e.target.checked)}
-                              className="rounded border-slate-700 bg-slate-800 text-blue-500"
+                              className="rounded border-[#3A3A3A] bg-[#080705] text-[#EEEEED]"
                             />
                             <span>Transparent</span>
                           </label>
@@ -1072,7 +1071,7 @@ const App = () => {
                             disabled={isTransparentBg}
                             value={bgColor}
                             onChange={(e) => setBgColor(e.target.value)}
-                            className="obsidian-input flex-1 px-3 py-2 rounded-xl text-xs font-mono uppercase disabled:opacity-30"
+                            className="graphite-input flex-1 px-3 py-2 rounded-xl text-xs font-mono uppercase disabled:opacity-30"
                           />
                         </div>
                       </div>
@@ -1084,7 +1083,7 @@ const App = () => {
                 {customizerTab === 'shapes' && (
                   <div className="space-y-4">
                     <div>
-                      <label className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 block">
+                      <label className="text-xs font-bold text-[#EEEEED] uppercase tracking-wider mb-2 block">
                         Body Pattern Style
                       </label>
                       <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
@@ -1099,7 +1098,7 @@ const App = () => {
                             key={style.id}
                             onClick={() => setDotsType(style.id as any)}
                             className={`p-2.5 rounded-2xl text-xs font-semibold text-center transition-all ${
-                              dotsType === style.id ? 'obsidian-pill-active' : 'obsidian-pill'
+                              dotsType === style.id ? 'graphite-pill-active' : 'graphite-pill'
                             }`}
                           >
                             {style.label}
@@ -1109,7 +1108,7 @@ const App = () => {
                     </div>
 
                     <div>
-                      <label className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 block">
+                      <label className="text-xs font-bold text-[#EEEEED] uppercase tracking-wider mb-2 block">
                         Corner Frame Shape
                       </label>
                       <div className="grid grid-cols-3 gap-2">
@@ -1122,7 +1121,7 @@ const App = () => {
                             key={style.id}
                             onClick={() => setCornersSquareType(style.id as any)}
                             className={`p-2.5 rounded-2xl text-xs font-semibold text-center transition-all ${
-                              cornersSquareType === style.id ? 'obsidian-pill-active' : 'obsidian-pill'
+                              cornersSquareType === style.id ? 'graphite-pill-active' : 'graphite-pill'
                             }`}
                           >
                             {style.label}
@@ -1136,7 +1135,7 @@ const App = () => {
                 {/* TAB: Logo */}
                 {customizerTab === 'logo' && (
                   <div className="space-y-4">
-                    <div className="border-2 border-dashed border-white/15 rounded-3xl p-6 text-center hover:border-blue-500/50 transition-colors relative">
+                    <div className="border-2 border-dashed border-[#3A3A3A] rounded-3xl p-6 text-center hover:border-[#EEEEED]/50 transition-colors relative">
                       <input
                         type="file"
                         accept="image/*"
@@ -1144,22 +1143,22 @@ const App = () => {
                         className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-20"
                       />
                       <div className="flex flex-col items-center">
-                        <Upload className="w-8 h-8 text-blue-400 mb-2" />
-                        <p className="text-xs font-bold text-slate-200">
+                        <Upload className="w-8 h-8 text-[#EEEEED] mb-2" />
+                        <p className="text-xs font-bold text-[#EEEEED]">
                           Upload Custom Logo
                         </p>
-                        <p className="text-[11px] text-slate-400 mt-1">
+                        <p className="text-[11px] text-[#a3a3a3] mt-1">
                           PNG, SVG, or JPG supported
                         </p>
                       </div>
                     </div>
 
                     {logoDataUrl && (
-                      <div className="obsidian-card rounded-2xl p-4 space-y-3">
+                      <div className="graphite-card rounded-2xl p-4 space-y-3">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             <img src={logoDataUrl} alt="Logo Preview" className="w-10 h-10 object-contain rounded-xl bg-white/10 p-1" />
-                            <span className="text-xs font-semibold text-slate-300">Custom Logo Active</span>
+                            <span className="text-xs font-semibold text-[#EEEEED]">Custom Logo Active</span>
                           </div>
                           <button
                             onClick={() => setLogoDataUrl(null)}
@@ -1170,7 +1169,7 @@ const App = () => {
                         </div>
 
                         <div>
-                          <div className="flex justify-between text-xs text-slate-400 mb-1">
+                          <div className="flex justify-between text-xs text-[#a3a3a3] mb-1">
                             <span>Logo Scale Ratio</span>
                             <span>{Math.round(logoSize * 100)}%</span>
                           </div>
@@ -1181,12 +1180,13 @@ const App = () => {
                             step="0.01"
                             value={logoSize}
                             onChange={(e) => setLogoSize(parseFloat(e.target.value))}
-                            className="w-full accent-blue-500"
+                            className="w-full accent-[#EEEEED]"
                           />
                         </div>
+
                         <div>
-                          <div className="flex justify-between text-xs text-slate-400 mb-1">
-                            <span>Logo Margin</span>
+                          <div className="flex justify-between text-xs text-[#a3a3a3] mb-1">
+                            <span>Logo Quiet Zone Margin</span>
                             <span>{logoMargin}px</span>
                           </div>
                           <input
@@ -1196,7 +1196,7 @@ const App = () => {
                             step="1"
                             value={logoMargin}
                             onChange={(e) => setLogoMargin(Number(e.target.value))}
-                            className="w-full accent-blue-500"
+                            className="w-full accent-[#EEEEED]"
                           />
                         </div>
                       </div>
@@ -1208,7 +1208,7 @@ const App = () => {
                 {customizerTab === 'specs' && (
                   <div className="space-y-4">
                     <div>
-                      <div className="flex justify-between text-xs font-semibold text-slate-300 mb-1.5">
+                      <div className="flex justify-between text-xs font-semibold text-[#EEEEED] mb-1.5">
                         <span>Preview Size</span>
                         <span>{qrSize}px</span>
                       </div>
@@ -1219,12 +1219,12 @@ const App = () => {
                         step="10"
                         value={qrSize}
                         onChange={(e) => setQrSize(Number(e.target.value))}
-                        className="w-full accent-blue-500"
+                        className="w-full accent-[#EEEEED]"
                       />
                     </div>
 
                     <div>
-                      <div className="flex justify-between text-xs font-semibold text-slate-300 mb-1.5">
+                      <div className="flex justify-between text-xs font-semibold text-[#EEEEED] mb-1.5">
                         <span>Quiet Zone Margin</span>
                         <span>{qrMargin}px</span>
                       </div>
@@ -1235,12 +1235,12 @@ const App = () => {
                         step="2"
                         value={qrMargin}
                         onChange={(e) => setQrMargin(Number(e.target.value))}
-                        className="w-full accent-blue-500"
+                        className="w-full accent-[#EEEEED]"
                       />
                     </div>
 
                     <div>
-                      <label className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 block">
+                      <label className="text-xs font-bold text-[#EEEEED] uppercase tracking-wider mb-2 block">
                         Error Correction Level
                       </label>
                       <div className="grid grid-cols-4 gap-2">
@@ -1254,7 +1254,7 @@ const App = () => {
                             key={item.id}
                             onClick={() => setErrorCorrection(item.id as any)}
                             className={`p-2 rounded-2xl text-xs font-semibold text-center transition-all ${
-                              errorCorrection === item.id ? 'obsidian-pill-active' : 'obsidian-pill'
+                              errorCorrection === item.id ? 'graphite-pill-active' : 'graphite-pill'
                             }`}
                           >
                             {item.id}
@@ -1267,21 +1267,21 @@ const App = () => {
               </div>
             </div>
 
-            {/* Right Column: Live Studio Preview (5 cols) */}
+            {/* Right Column: Live Preview (5 cols) */}
             <div className="lg:col-span-5 lg:sticky lg:top-24 space-y-6 no-print">
-              <div className="obsidian-card rounded-3xl p-6 sm:p-8 flex flex-col items-center justify-center text-center space-y-6">
+              <div className="graphite-card rounded-3xl p-6 sm:p-8 flex flex-col items-center justify-center text-center space-y-6">
                 
                 <div className="w-full flex items-center justify-between">
-                  <span className="text-xs font-bold uppercase tracking-widest text-slate-400">
+                  <span className="text-xs font-bold uppercase tracking-widest text-[#a3a3a3]">
                     Live Preview
                   </span>
-                  <span className="text-[10px] font-mono font-medium px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                  <span className="text-[10px] font-mono font-medium px-2.5 py-1 rounded-full bg-[#3A3A3A]/40 text-[#EEEEED] border border-[#3A3A3A]">
                     {exportSize} x {exportSize} px
                   </span>
                 </div>
 
-                {/* QR Canvas Output Container */}
-                <div className="relative p-6 rounded-3xl bg-[#0b0d16] border border-white/10 shadow-2xl flex items-center justify-center min-h-[300px] w-[320px] max-w-full">
+                {/* Canvas Container */}
+                <div className="relative p-6 rounded-3xl bg-[#080705] border border-[#3A3A3A] shadow-2xl flex items-center justify-center min-h-[300px] w-[320px] max-w-full">
                   <div 
                     ref={previewRef} 
                     className="w-full h-full flex items-center justify-center"
@@ -1293,9 +1293,9 @@ const App = () => {
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       onClick={() => handleDownload('png')}
-                      className="btn-accent py-3 rounded-2xl text-xs font-bold flex items-center justify-center gap-2"
+                      className="btn-platinum py-3 rounded-2xl text-xs font-bold flex items-center justify-center gap-2"
                     >
-                      <Download className="w-4 h-4" />
+                      <Download className="w-4 h-4 text-[#080705]" />
                       <span>Download PNG</span>
                     </button>
 
@@ -1304,9 +1304,9 @@ const App = () => {
                         setExportFormat('svg');
                         handleDownload('svg');
                       }}
-                      className="btn-secondary py-3 rounded-2xl text-xs font-bold flex items-center justify-center gap-2"
+                      className="btn-graphite py-3 rounded-2xl text-xs font-bold flex items-center justify-center gap-2"
                     >
-                      <Download className="w-4 h-4 text-purple-400" />
+                      <Download className="w-4 h-4 text-[#EEEEED]" />
                       <span>Download SVG</span>
                     </button>
                   </div>
@@ -1314,7 +1314,7 @@ const App = () => {
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       onClick={handleNativeShare}
-                      className="btn-secondary py-2.5 rounded-2xl text-xs font-semibold flex items-center justify-center gap-1.5 text-blue-400"
+                      className="btn-graphite py-2.5 rounded-2xl text-xs font-semibold flex items-center justify-center gap-1.5 text-[#EEEEED]"
                     >
                       <Share2 className="w-3.5 h-3.5" />
                       <span>Web Share</span>
@@ -1322,29 +1322,29 @@ const App = () => {
 
                     <button
                       onClick={handleCopyImageToClipboard}
-                      className="btn-secondary py-2.5 rounded-2xl text-xs font-semibold flex items-center justify-center gap-1.5"
+                      className="btn-graphite py-2.5 rounded-2xl text-xs font-semibold flex items-center justify-center gap-1.5"
                     >
                       {copiedImageState ? (
                         <Check className="w-3.5 h-3.5 text-emerald-400" />
                       ) : (
-                        <Copy className="w-3.5 h-3.5 text-amber-400" />
+                        <Copy className="w-3.5 h-3.5 text-[#EEEEED]" />
                       )}
                       <span>{copiedImageState ? 'Image Copied!' : 'Copy Image'}</span>
                     </button>
                   </div>
 
                   {/* Quality Dropdown */}
-                  <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs">
-                    <span className="text-slate-400 font-medium">Export Quality:</span>
+                  <div className="pt-2 border-t border-[#3A3A3A] flex items-center justify-between text-xs">
+                    <span className="text-[#a3a3a3] font-medium">Export Quality:</span>
                     <select
                       value={exportSize}
                       onChange={(e) => setExportSize(Number(e.target.value))}
-                      className="obsidian-input px-3 py-1.5 rounded-xl text-xs font-semibold"
+                      className="graphite-input px-3 py-1.5 rounded-xl text-xs font-semibold"
                     >
-                      <option value={512} className="bg-slate-900 text-white">Standard (512px)</option>
-                      <option value={1024} className="bg-slate-900 text-white">High Res (1024px)</option>
-                      <option value={2048} className="bg-slate-900 text-white">Ultra HD (2048px)</option>
-                      <option value={4096} className="bg-slate-900 text-white">4K Print (4096px)</option>
+                      <option value={512} className="bg-[#080705] text-[#EEEEED]">Standard (512px)</option>
+                      <option value={1024} className="bg-[#080705] text-[#EEEEED]">High Res (1024px)</option>
+                      <option value={2048} className="bg-[#080705] text-[#EEEEED]">Ultra HD (2048px)</option>
+                      <option value={4096} className="bg-[#080705] text-[#EEEEED]">4K Print (4096px)</option>
                     </select>
                   </div>
                 </div>
@@ -1358,19 +1358,19 @@ const App = () => {
         {/* VIEW 2: QR Scanner / Reader */}
         {activeView === 'scan' && (
           <div className="max-w-2xl mx-auto space-y-6">
-            <div className="obsidian-card rounded-3xl p-8 text-center space-y-6">
-              <div className="w-16 h-16 rounded-3xl btn-accent mx-auto flex items-center justify-center shadow-xl shadow-blue-500/25">
-                <Scan className="w-8 h-8 text-white animate-pulse" />
+            <div className="graphite-card rounded-3xl p-8 text-center space-y-6">
+              <div className="w-16 h-16 rounded-3xl btn-platinum mx-auto flex items-center justify-center shadow-xl">
+                <Scan className="w-8 h-8 text-[#080705]" />
               </div>
               
               <div>
-                <h2 className="text-xl font-bold text-white mb-2">QR Code Reader & Decoder</h2>
-                <p className="text-xs text-slate-400">
+                <h2 className="text-xl font-bold text-[#EEEEED] mb-2">QR Code Reader & Decoder</h2>
+                <p className="text-xs text-[#a3a3a3]">
                   Upload any QR Code image file to decode its link or content 100% on-device.
                 </p>
               </div>
 
-              <div className="border-2 border-dashed border-white/15 rounded-3xl p-8 relative hover:border-blue-500/50 transition-colors">
+              <div className="border-2 border-dashed border-[#3A3A3A] rounded-3xl p-8 relative hover:border-[#EEEEED]/50 transition-colors">
                 <input
                   type="file"
                   accept="image/*"
@@ -1378,14 +1378,14 @@ const App = () => {
                   className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-20"
                 />
                 <div className="flex flex-col items-center">
-                  <Upload className="w-10 h-10 text-blue-400 mb-3" />
-                  <p className="text-sm font-bold text-slate-200">Drag & Drop QR Image Here</p>
-                  <p className="text-xs text-slate-400 mt-1">PNG, JPG, WebP, or SVG</p>
+                  <Upload className="w-10 h-10 text-[#EEEEED] mb-3" />
+                  <p className="text-sm font-bold text-[#EEEEED]">Drag & Drop QR Image Here</p>
+                  <p className="text-xs text-[#a3a3a3] mt-1">PNG, JPG, WebP, or SVG</p>
                 </div>
               </div>
 
               {scannedResult && (
-                <div className="obsidian-card rounded-2xl p-6 text-left space-y-3 border-emerald-500/30">
+                <div className="graphite-card rounded-2xl p-6 text-left space-y-3 border-emerald-500/30">
                   <div className="flex items-center justify-between text-xs text-emerald-400 font-bold">
                     <span className="flex items-center gap-1.5">
                       <CheckCircle2 className="w-4 h-4" />
@@ -1393,13 +1393,13 @@ const App = () => {
                     </span>
                     <button
                       onClick={() => navigator.clipboard.writeText(scannedResult)}
-                      className="btn-secondary px-3 py-1 rounded-lg text-xs flex items-center gap-1 text-slate-200"
+                      className="btn-graphite px-3 py-1 rounded-lg text-xs flex items-center gap-1 text-[#EEEEED]"
                     >
                       <Copy className="w-3.5 h-3.5" />
                       Copy
                     </button>
                   </div>
-                  <div className="p-4 rounded-xl bg-black/40 text-sm font-mono text-slate-100 break-all select-all">
+                  <div className="p-4 rounded-xl bg-black/50 text-sm font-mono text-[#EEEEED] break-all select-all border border-[#3A3A3A]">
                     {scannedResult}
                   </div>
                   {scannedResult.startsWith('http') && (
@@ -1407,9 +1407,9 @@ const App = () => {
                       href={scannedResult}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="btn-accent px-4 py-2 rounded-xl text-xs font-bold inline-flex items-center gap-2"
+                      className="btn-platinum px-4 py-2 rounded-xl text-xs font-bold inline-flex items-center gap-2"
                     >
-                      <ExternalLink className="w-3.5 h-3.5" />
+                      <ExternalLink className="w-3.5 h-3.5 text-[#080705]" />
                       Open Link
                     </a>
                   )}
@@ -1428,11 +1428,11 @@ const App = () => {
         {/* VIEW 3: History Log */}
         {activeView === 'history' && (
           <div className="max-w-3xl mx-auto space-y-6">
-            <div className="obsidian-card rounded-3xl p-6 space-y-6">
-              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+            <div className="graphite-card rounded-3xl p-6 space-y-6">
+              <div className="flex items-center justify-between border-b border-[#3A3A3A] pb-4">
                 <div>
-                  <h2 className="text-lg font-bold text-white">QR Code History Log</h2>
-                  <p className="text-xs text-slate-400">Stored locally in your browser memory.</p>
+                  <h2 className="text-lg font-bold text-[#EEEEED]">QR Code History Log</h2>
+                  <p className="text-xs text-[#a3a3a3]">Stored locally in browser memory.</p>
                 </div>
                 {history.length > 0 && (
                   <button
@@ -1440,7 +1440,7 @@ const App = () => {
                       localStorage.removeItem('qrforge_history');
                       setHistory([]);
                     }}
-                    className="btn-secondary px-3 py-1.5 rounded-xl text-xs font-semibold text-red-400 hover:border-red-500/40 flex items-center gap-1.5"
+                    className="btn-graphite px-3 py-1.5 rounded-xl text-xs font-semibold text-red-400 hover:border-red-500/40 flex items-center gap-1.5"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                     Clear History
@@ -1449,23 +1449,23 @@ const App = () => {
               </div>
 
               {history.length === 0 ? (
-                <div className="py-12 text-center text-slate-500 text-sm">
+                <div className="py-12 text-center text-[#a3a3a3] text-sm">
                   No generated QR codes in history yet.
                 </div>
               ) : (
                 <div className="space-y-3">
                   {history.map((item) => (
-                    <div key={item.id} className="obsidian-card rounded-2xl p-4 flex items-center justify-between">
+                    <div key={item.id} className="graphite-card rounded-2xl p-4 flex items-center justify-between">
                       <div className="space-y-1 max-w-[70%]">
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400">
+                          <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-[#3A3A3A] text-[#EEEEED]">
                             {item.type}
                           </span>
-                          <span className="text-xs text-slate-500">
+                          <span className="text-xs text-[#a3a3a3]">
                             {new Date(item.timestamp).toLocaleTimeString()}
                           </span>
                         </div>
-                        <p className="text-xs font-mono text-slate-200 truncate">
+                        <p className="text-xs font-mono text-[#EEEEED] truncate">
                           {item.data}
                         </p>
                       </div>
@@ -1476,13 +1476,13 @@ const App = () => {
                             setRawText(item.data);
                             setActiveView('create');
                           }}
-                          className="btn-secondary px-3 py-1.5 rounded-xl text-xs font-semibold"
+                          className="btn-graphite px-3 py-1.5 rounded-xl text-xs font-semibold"
                         >
                           Load
                         </button>
                         <button
                           onClick={() => navigator.clipboard.writeText(item.data)}
-                          className="btn-secondary p-2 rounded-xl text-xs"
+                          className="btn-graphite p-2 rounded-xl text-xs"
                         >
                           <Copy className="w-3.5 h-3.5" />
                         </button>
@@ -1500,10 +1500,10 @@ const App = () => {
       {/* Privacy Assurance Drawer / Modal */}
       {showPrivacyModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-          <div className="obsidian-card max-w-lg w-full rounded-3xl p-6 sm:p-8 relative space-y-6 border-emerald-500/30">
+          <div className="graphite-card max-w-lg w-full rounded-3xl p-6 sm:p-8 relative space-y-6 border-emerald-500/30">
             <button
               onClick={() => setShowPrivacyModal(false)}
-              className="absolute top-5 right-5 p-2 rounded-xl bg-white/5 text-slate-400 hover:text-white"
+              className="absolute top-5 right-5 p-2 rounded-xl bg-white/5 text-[#a3a3a3] hover:text-white"
             >
               <X className="w-4 h-4" />
             </button>
@@ -1513,32 +1513,32 @@ const App = () => {
                 <ShieldCheck className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">Privacy & Security Architecture</h3>
-                <p className="text-xs text-slate-400">Zero Server Data Transfer</p>
+                <h3 className="text-lg font-bold text-[#EEEEED]">Privacy & Security Architecture</h3>
+                <p className="text-xs text-[#a3a3a3]">Zero Server Data Transfer</p>
               </div>
             </div>
 
-            <div className="space-y-3 text-xs text-slate-300">
-              <div className="p-3 rounded-2xl bg-white/5 border border-white/10 flex items-start gap-3">
-                <Lock className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
+            <div className="space-y-3 text-xs text-[#EEEEED]">
+              <div className="p-3 rounded-2xl bg-[#080705] border border-[#3A3A3A] flex items-start gap-3">
+                <Lock className="w-4 h-4 text-[#EEEEED] shrink-0 mt-0.5" />
                 <div>
-                  <strong className="text-slate-100 block mb-0.5">100% Browser Execution</strong>
-                  All SVG & HTML5 Canvas QR code rendering is performed entirely inside your device's browser CPU/GPU memory.
+                  <strong className="text-white block mb-0.5">100% Browser Execution</strong>
+                  All SVG & HTML5 Canvas QR code rendering is performed entirely inside your device's browser memory.
                 </div>
               </div>
 
-              <div className="p-3 rounded-2xl bg-white/5 border border-white/10 flex items-start gap-3">
+              <div className="p-3 rounded-2xl bg-[#080705] border border-[#3A3A3A] flex items-start gap-3">
                 <WifiOff className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                 <div>
-                  <strong className="text-slate-100 block mb-0.5">Offline Progressive Web App</strong>
+                  <strong className="text-white block mb-0.5">Offline Progressive Web App</strong>
                   Once loaded, QRForge works completely offline without an internet connection.
                 </div>
               </div>
 
-              <div className="p-3 rounded-2xl bg-white/5 border border-white/10 flex items-start gap-3">
+              <div className="p-3 rounded-2xl bg-[#080705] border border-[#3A3A3A] flex items-start gap-3">
                 <ShieldCheck className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
                 <div>
-                  <strong className="text-slate-100 block mb-0.5">No Tracking or Telemetry</strong>
+                  <strong className="text-white block mb-0.5">No Tracking or Telemetry</strong>
                   No external analytics scripts, no cookies, no tracking pixels, and zero server logging.
                 </div>
               </div>
@@ -1546,7 +1546,7 @@ const App = () => {
 
             <button
               onClick={() => setShowPrivacyModal(false)}
-              className="btn-accent w-full py-3 rounded-2xl text-xs font-bold"
+              className="btn-platinum w-full py-3 rounded-2xl text-xs font-bold"
             >
               Got it, Close
             </button>
@@ -1555,7 +1555,7 @@ const App = () => {
       )}
 
       {/* Footer Container */}
-      <footer className="relative z-10 py-6 px-4 text-center border-t border-white/10 backdrop-blur-lg bg-[#07080c]/90 text-xs text-slate-400 no-print">
+      <footer className="relative z-10 py-6 px-4 text-center border-t border-[#3A3A3A] backdrop-blur-lg bg-[#080705]/90 text-xs text-[#a3a3a3] no-print">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="flex items-center gap-1.5">
             <span>QRForge</span>
@@ -1570,7 +1570,7 @@ const App = () => {
           {deferredInstallPrompt && !isAppInstalled && (
             <button
               onClick={handleInstallApp}
-              className="btn-secondary px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 text-blue-400"
+              className="btn-graphite px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 text-[#EEEEED]"
             >
               <DownloadCloud className="w-3.5 h-3.5" />
               <span>Install Offline PWA App</span>
