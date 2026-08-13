@@ -137,7 +137,7 @@ const App = () => {
 
   // Content Selection & Inputs
   const [contentType, setContentType] = useState<ContentType>('url');
-  const [rawText, setRawText] = useState('https://github.com');
+  const [rawText, setRawText] = useState('');
   
   // Wi-Fi State
   const [wifiSSID, setWifiSSID] = useState('');
@@ -218,6 +218,7 @@ const App = () => {
 
   const previewRef = useRef<HTMLDivElement | null>(null);
   const qrInstanceRef = useRef<QRCodeStyling | null>(null);
+  const isRestoringFromHistoryRef = useRef<boolean>(false);
 
   // Catch PWA beforeinstallprompt event
   useEffect(() => {
@@ -278,33 +279,70 @@ const App = () => {
     containerShape, containerBg, containerPadding, logoBorderRadius
   ]);
 
-  // Compute Encoded Data String
-  const getEncodedData = useCallback((): string => {
+  // Compute Encoded Data & Validation State
+  const getEncodedData = useCallback((): { data: string; isValid: boolean } => {
     switch (contentType) {
-      case 'url':
+      case 'url': {
         const urlRes = normalizeUrlInput(rawText);
-        return urlRes.normalizedUrl || 'https://github.com';
-      case 'text':
-        return rawText || 'QRForge — Privacy-First QR Code';
-      case 'wifi':
-        if (!wifiSSID.trim()) return 'WIFI:S:MyNetwork;T:WPA;P:secret123;;';
-        return `WIFI:S:${wifiSSID};T:${wifiEncryption};P:${wifiPassword};H:${wifiHidden ? 'true' : 'false'};;`;
-      case 'vcard':
-        return `BEGIN:VCARD\nVERSION:3.0\nN:${vcardLastName};${vcardFirstName};;;\nFN:${vcardFirstName} ${vcardLastName}\nORG:${vcardCompany}\nTITLE:${vcardTitle}\nTEL:${vcardPhone}\nEMAIL:${vcardEmail}\nEND:VCARD`;
-      case 'event':
-        const startFormatted = eventStartDate ? eventStartDate.replace(/[-:]/g, '') : '20260901T100000Z';
-        const endFormatted = eventEndDate ? eventEndDate.replace(/[-:]/g, '') : '20260901T120000Z';
-        return `BEGIN:VEVENT\nSUMMARY:${eventTitle || 'Meeting'}\nLOCATION:${eventLocation || 'Online'}\nDTSTART:${startFormatted}\nDTEND:${endFormatted}\nDESCRIPTION:${eventDescription || 'Created with QRForge'}\nEND:VEVENT`;
-      case 'email':
-        if (!emailTo.trim()) return 'mailto:info@example.com';
-        return `mailto:${emailTo}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-      case 'phone':
-        return `tel:${rawText || '+1234567890'}`;
-      case 'whatsapp':
+        return {
+          data: urlRes.isValid ? urlRes.normalizedUrl : '',
+          isValid: urlRes.isValid,
+        };
+      }
+      case 'text': {
+        const trimmed = rawText.trim();
+        return {
+          data: trimmed,
+          isValid: trimmed.length > 0,
+        };
+      }
+      case 'wifi': {
+        const isValid = wifiSSID.trim().length > 0;
+        const data = isValid
+          ? `WIFI:S:${wifiSSID};T:${wifiEncryption};P:${wifiPassword};H:${wifiHidden ? 'true' : 'false'};;`
+          : '';
+        return { data, isValid };
+      }
+      case 'vcard': {
+        const isValid = (vcardFirstName.trim() + vcardLastName.trim()).length > 0;
+        const data = isValid
+          ? `BEGIN:VCARD\nVERSION:3.0\nN:${vcardLastName};${vcardFirstName};;;\nFN:${vcardFirstName} ${vcardLastName}\nORG:${vcardCompany}\nTITLE:${vcardTitle}\nTEL:${vcardPhone}\nEMAIL:${vcardEmail}\nEND:VCARD`
+          : '';
+        return { data, isValid };
+      }
+      case 'event': {
+        const isValid = eventTitle.trim().length > 0;
+        const startFormatted = eventStartDate ? eventStartDate.replace(/[-:]/g, '') : '';
+        const endFormatted = eventEndDate ? eventEndDate.replace(/[-:]/g, '') : '';
+        const data = isValid
+          ? `BEGIN:VEVENT\nSUMMARY:${eventTitle}\nLOCATION:${eventLocation}\nDTSTART:${startFormatted}\nDTEND:${endFormatted}\nDESCRIPTION:${eventDescription}\nEND:VEVENT`
+          : '';
+        return { data, isValid };
+      }
+      case 'email': {
+        const isValid = emailTo.trim().length > 0 && emailTo.includes('@');
+        const data = isValid
+          ? `mailto:${emailTo}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
+          : '';
+        return { data, isValid };
+      }
+      case 'phone': {
+        const trimmed = rawText.trim();
+        return {
+          data: trimmed ? `tel:${trimmed}` : '',
+          isValid: trimmed.length > 0,
+        };
+      }
+      case 'whatsapp': {
         const cleanNum = waNumber.replace(/[^0-9]/g, '');
-        return `https://wa.me/${cleanNum || '1234567890'}?text=${encodeURIComponent(waMessage)}`;
+        const isValid = cleanNum.length >= 7;
+        const data = isValid
+          ? `https://wa.me/${cleanNum}?text=${encodeURIComponent(waMessage)}`
+          : '';
+        return { data, isValid };
+      }
       default:
-        return rawText || 'https://github.com';
+        return { data: '', isValid: false };
     }
   }, [
     contentType, rawText, wifiSSID, wifiPassword, wifiEncryption, wifiHidden,
@@ -313,29 +351,39 @@ const App = () => {
     emailTo, emailSubject, emailBody, waNumber, waMessage
   ]);
 
-  // Save to History Log
-  const saveToHistory = useCallback((dataStr: string) => {
+  // Save ONLY Valid Normalized Payloads to History
+  const saveToHistory = useCallback((dataStr: string, itemType: ContentType) => {
+    if (!dataStr || dataStr.trim().length === 0) return;
+    if (isRestoringFromHistoryRef.current) return;
+
     const newItem: HistoryItem = {
       id: Date.now().toString(),
       timestamp: Date.now(),
-      type: contentType,
-      title: dataStr.length > 30 ? dataStr.substring(0, 30) + '...' : dataStr,
+      type: itemType,
+      title: dataStr.length > 35 ? dataStr.substring(0, 35) + '...' : dataStr,
       data: dataStr,
     };
     setHistory((prev) => {
+      // Deduplicate by payload data string
       const filtered = prev.filter((item) => item.data !== dataStr);
       const updated = [newItem, ...filtered].slice(0, 25);
       localStorage.setItem('qrforge_history', JSON.stringify(updated));
       return updated;
     });
-  }, [contentType]);
+  }, []);
 
   // Update QR Code Canvas
   const updateQRCode = useCallback(() => {
     if (!previewRef.current) return;
 
-    const data = getEncodedData();
+    const { data, isValid } = getEncodedData();
     const finalBgColor = isTransparentBg ? 'transparent' : bgColor;
+
+    if (!isValid || !data) {
+      previewRef.current.innerHTML = '';
+      qrInstanceRef.current = null;
+      return;
+    }
 
     const options = {
       width: qrSize,
@@ -375,11 +423,11 @@ const App = () => {
     qrInstanceRef.current = qrCode;
     qrCode.append(previewRef.current);
 
-    saveToHistory(data);
+    saveToHistory(data, contentType);
   }, [
     getEncodedData, qrSize, qrMargin, errorCorrection, logoScale,
     dotsType, dotsColor, isTransparentBg, bgColor, cornersSquareType,
-    cornersSquareColor, cornersDotType, cornersDotColor, compositeLogoUrl, saveToHistory
+    cornersSquareColor, cornersDotType, cornersDotColor, compositeLogoUrl, saveToHistory, contentType
   ]);
 
   useEffect(() => {
@@ -415,7 +463,9 @@ const App = () => {
 
   // Download QR Image (Single Source of Truth)
   const handleDownload = useCallback((format: ExportFormat = exportFormat) => {
-    const data = getEncodedData();
+    const { data, isValid } = getEncodedData();
+    if (!isValid || !data) return;
+
     const finalBgColor = isTransparentBg ? 'transparent' : bgColor;
 
     const exportOptions = {
@@ -490,8 +540,8 @@ const App = () => {
             } catch (err) {
               console.log('Share canceled or failed', err);
             }
-          } else {
-            navigator.clipboard.writeText(getEncodedData());
+            const { data } = getEncodedData();
+            if (data) navigator.clipboard.writeText(data);
             alert('Web Share API not supported on this device. Data copied to clipboard!');
           }
         }, 'image/png');
@@ -1625,29 +1675,48 @@ const App = () => {
                     ref={previewRef} 
                     className="w-full h-full flex items-center justify-center"
                   />
+                  {!getEncodedData().isValid && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 space-y-3 pointer-events-none">
+                      <div className="w-14 h-14 rounded-2xl bg-[#3A3A3A]/30 border border-[#3A3A3A] flex items-center justify-center">
+                        <Sparkles className="w-7 h-7 text-[#a3a3a3] animate-pulse" />
+                      </div>
+                      <div className="space-y-1 max-w-[240px]">
+                        <h4 className="text-xs font-bold text-[#EEEEED]">No Valid Payload</h4>
+                        <p className="text-[11px] text-[#a3a3a3] leading-relaxed">
+                          Type a valid URL or content above to generate your QR Code.
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Payload Metadata Summary Bar */}
-                <div className="w-full text-left bg-[#181818]/80 border border-[#3A3A3A] rounded-2xl p-3.5 flex items-center justify-between text-xs gap-2">
-                  <div className="flex flex-col truncate">
-                    <div className="flex items-center gap-1.5 font-bold text-[#EEEEED] capitalize">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                      <span>{contentType} Payload</span>
+                {getEncodedData().isValid ? (
+                  <div className="w-full text-left bg-[#181818]/80 border border-[#3A3A3A] rounded-2xl p-3.5 flex items-center justify-between text-xs gap-2">
+                    <div className="flex flex-col truncate">
+                      <div className="flex items-center gap-1.5 font-bold text-[#EEEEED] capitalize">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                        <span>{contentType} Payload</span>
+                      </div>
+                      <span className="text-[10px] font-mono text-[#a3a3a3] truncate mt-0.5">
+                        {getEncodedData().data}
+                      </span>
                     </div>
-                    <span className="text-[10px] font-mono text-[#a3a3a3] truncate mt-0.5">
-                      {getEncodedData()}
-                    </span>
-                  </div>
 
-                  <button
-                    onClick={() => setActiveView('scan')}
-                    className="btn-graphite px-3 py-1.5 rounded-xl text-[11px] font-semibold flex items-center gap-1 shrink-0 hover:border-[#EEEEED]/40"
-                    title="Test-scan payload in Scanner"
-                  >
-                    <Scan className="w-3.5 h-3.5 text-[#EEEEED]" />
-                    <span>Test QR</span>
-                  </button>
-                </div>
+                    <button
+                      onClick={() => setActiveView('scan')}
+                      className="btn-graphite px-3 py-1.5 rounded-xl text-[11px] font-semibold flex items-center gap-1 shrink-0 hover:border-[#EEEEED]/40"
+                      title="Test-scan payload in Scanner"
+                    >
+                      <Scan className="w-3.5 h-3.5 text-[#EEEEED]" />
+                      <span>Test QR</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="w-full text-center bg-[#181818]/40 border border-[#3A3A3A] rounded-2xl p-3 text-xs text-[#a3a3a3] italic">
+                    Awaiting valid input to generate QR code
+                  </div>
+                )}
 
                 {/* Readability & Safety Validation Panel */}
                 <div className="w-full text-left graphite-card rounded-2xl p-4 space-y-3 border-white/10">
@@ -1896,8 +1965,15 @@ const App = () => {
                       <div className="flex gap-2">
                         <button
                           onClick={() => {
-                            setRawText(item.data);
+                            isRestoringFromHistoryRef.current = true;
+                            setContentType(item.type);
+                            if (item.type === 'url' || item.type === 'text' || item.type === 'phone') {
+                              setRawText(item.data);
+                            }
                             setActiveView('create');
+                            setTimeout(() => {
+                              isRestoringFromHistoryRef.current = false;
+                            }, 300);
                           }}
                           className="btn-graphite px-3 py-1.5 rounded-xl text-xs font-semibold"
                         >
