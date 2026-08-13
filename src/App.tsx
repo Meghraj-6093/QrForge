@@ -41,6 +41,7 @@ import {
   type ErrorCorrectionLevel,
   type SafetyReport
 } from './utils/qrLogoEngine';
+import { ExportResolutionSelect, EXPORT_RESOLUTIONS } from './components/ExportResolutionSelect';
 
 type MainView = 'create' | 'scan' | 'history';
 type ContentType = 'url' | 'text' | 'wifi' | 'vcard' | 'event' | 'email' | 'phone' | 'whatsapp';
@@ -1474,20 +1475,36 @@ const App = () => {
                 {/* TAB: Specs */}
                 {customizerTab === 'specs' && (
                   <div className="space-y-4">
-                    <div>
-                      <label className="text-xs font-bold text-[#EEEEED] uppercase tracking-wider mb-2 block">
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-[#EEEEED] uppercase tracking-wider block">
                         Export Resolution Quality
                       </label>
-                      <select
-                        value={exportSize}
-                        onChange={(e) => setExportSize(Number(e.target.value))}
-                        className="graphite-input w-full px-4 py-2.5 rounded-2xl text-xs font-semibold"
-                      >
-                        <option value={512} className="bg-[#080705] text-[#EEEEED]">Standard (512 x 512 px)</option>
-                        <option value={1024} className="bg-[#080705] text-[#EEEEED]">High Res (1024 x 1024 px)</option>
-                        <option value={2048} className="bg-[#080705] text-[#EEEEED]">Ultra HD (2048 x 2048 px)</option>
-                        <option value={4096} className="bg-[#080705] text-[#EEEEED]">4K Print (4096 x 4096 px)</option>
-                      </select>
+                      <ExportResolutionSelect 
+                        value={exportSize} 
+                        onChange={setExportSize} 
+                      />
+                      {/* Synchronized Slider */}
+                      <div className="pt-2">
+                        <div className="flex justify-between text-xs font-semibold text-[#EEEEED] mb-1">
+                          <span className="text-[#a3a3a3]">Resolution Output Slider</span>
+                          <span className="font-mono">{exportSize} &times; {exportSize} px</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="512"
+                          max="4096"
+                          step="512"
+                          value={exportSize}
+                          onChange={(e) => {
+                            const val = Number(e.target.value);
+                            const closest = EXPORT_RESOLUTIONS.reduce((prev, curr) => 
+                              Math.abs(curr.value - val) < Math.abs(prev.value - val) ? curr : prev
+                            );
+                            setExportSize(closest.value);
+                          }}
+                          className="w-full accent-[#EEEEED]"
+                        />
+                      </div>
                     </div>
 
                     <div>
@@ -1675,19 +1692,14 @@ const App = () => {
                     </button>
                   </div>
 
-                  {/* Quality Dropdown */}
-                  <div className="pt-2 border-t border-[#3A3A3A] flex items-center justify-between text-xs">
-                    <span className="text-[#a3a3a3] font-medium">Export Quality:</span>
-                    <select
-                      value={exportSize}
-                      onChange={(e) => setExportSize(Number(e.target.value))}
-                      className="graphite-input px-3 py-1.5 rounded-xl text-xs font-semibold"
-                    >
-                      <option value={512} className="bg-[#080705] text-[#EEEEED]">Standard (512px)</option>
-                      <option value={1024} className="bg-[#080705] text-[#EEEEED]">High Res (1024px)</option>
-                      <option value={2048} className="bg-[#080705] text-[#EEEEED]">Ultra HD (2048px)</option>
-                      <option value={4096} className="bg-[#080705] text-[#EEEEED]">4K Print (4096px)</option>
-                    </select>
+                  {/* Custom Accessible Quality Dropdown */}
+                  <div className="pt-2 border-t border-[#3A3A3A] flex items-center justify-between text-xs gap-3">
+                    <span className="text-[#a3a3a3] font-medium shrink-0">Export Quality:</span>
+                    <ExportResolutionSelect 
+                      value={exportSize} 
+                      onChange={setExportSize} 
+                      className="w-48 sm:w-56"
+                    />
                   </div>
                 </div>
 
