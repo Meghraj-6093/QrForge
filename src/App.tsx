@@ -29,8 +29,18 @@ import {
   DownloadCloud,
   CheckCircle2,
   Lock,
-  WifiOff
+  WifiOff,
+  AlertTriangle,
+  Wrench
 } from 'lucide-react';
+import {
+  trimTransparentEdges,
+  createCompositeLogo,
+  validateQRLogoSafety,
+  type ContainerShape,
+  type ErrorCorrectionLevel,
+  type SafetyReport
+} from './utils/qrLogoEngine';
 
 type MainView = 'create' | 'scan' | 'history';
 type ContentType = 'url' | 'text' | 'wifi' | 'vcard' | 'event' | 'email' | 'phone' | 'whatsapp';
@@ -169,12 +179,18 @@ const App = () => {
   const [cornersDotType, setCornersDotType] = useState<'dot' | 'square'>('dot');
   const [cornersSquareColor, setCornersSquareColor] = useState<string>('#EEEEED');
   const [cornersDotColor, setCornersDotColor] = useState<string>('#EEEEED');
-  const [errorCorrection, setErrorCorrection] = useState<'L' | 'M' | 'Q' | 'H'>('M');
+  const [errorCorrection, setErrorCorrection] = useState<ErrorCorrectionLevel>('M');
 
-  // Logo State
+  // Advanced Logo & Protective Container State
   const [logoDataUrl, setLogoDataUrl] = useState<string | null>(null);
-  const [logoSize, setLogoSize] = useState<number>(0.24);
-  const [logoMargin, setLogoMargin] = useState<number>(4);
+  const [trimmedDataUrl, setTrimmedDataUrl] = useState<string | null>(null);
+  const [compositeLogoUrl, setCompositeLogoUrl] = useState<string | null>(null);
+  const [logoScale, setLogoScale] = useState<number>(0.22);
+  const [containerShape, setContainerShape] = useState<ContainerShape>('rounded-square');
+  const [containerBg, setContainerBg] = useState<string>('#080705');
+  const [containerPadding, setContainerPadding] = useState<number>(6);
+  const [logoBorderRadius, setLogoBorderRadius] = useState<number>(24);
+  const [logoAspectRatio, setLogoAspectRatio] = useState<number>(1);
 
   // QR Scanner State
   const [scannedResult, setScannedResult] = useState<string | null>(null);
@@ -219,14 +235,46 @@ const App = () => {
     };
   }, []);
 
-  const handleInstallApp = async () => {
-    if (!deferredInstallPrompt) return;
-    deferredInstallPrompt.prompt();
-    const { outcome } = await deferredInstallPrompt.userChoice;
-    if (outcome === 'accepted') {
-      setDeferredInstallPrompt(null);
+  // Preprocess uploaded raw logo image
+  const processUploadedLogo = useCallback(async (rawUrl: string) => {
+    setLogoDataUrl(rawUrl);
+    const trimmed = await trimTransparentEdges(rawUrl);
+    setTrimmedDataUrl(trimmed.trimmedDataUrl);
+    setLogoAspectRatio(trimmed.aspectRatio);
+    // Auto upgrade Error Correction to Level H for optimal scanning when logo is added
+    setErrorCorrection('H');
+  }, []);
+
+  // Synthesize Composite Protective Logo Container
+  useEffect(() => {
+    if (!logoDataUrl) {
+      setCompositeLogoUrl(null);
+      return;
     }
-  };
+
+    let isMounted = true;
+    createCompositeLogo({
+      logoDataUrl,
+      trimmedDataUrl,
+      naturalWidth: 200,
+      naturalHeight: 200,
+      aspectRatio: logoAspectRatio,
+      logoScale,
+      containerShape,
+      containerBg: containerShape === 'transparent' ? 'transparent' : containerBg,
+      containerPadding,
+      borderRadius: logoBorderRadius,
+    }).then((compositeUrl) => {
+      if (isMounted) {
+        setCompositeLogoUrl(compositeUrl);
+      }
+    });
+
+    return () => { isMounted = false; };
+  }, [
+    logoDataUrl, trimmedDataUrl, logoAspectRatio, logoScale,
+    containerShape, containerBg, containerPadding, logoBorderRadius
+  ]);
 
   // Compute Encoded Data String
   const getEncodedData = useCallback((): string => {
@@ -300,8 +348,8 @@ const App = () => {
       },
       imageOptions: {
         hideBackgroundDots: true,
-        imageSize: logoSize,
-        margin: logoMargin,
+        imageSize: logoScale,
+        margin: 0,
         crossOrigin: 'anonymous',
       },
       dotsOptions: {
@@ -319,7 +367,7 @@ const App = () => {
         type: cornersDotType,
         color: cornersDotColor || dotsColor,
       },
-      image: logoDataUrl || undefined,
+      image: compositeLogoUrl || undefined,
     };
 
     previewRef.current.innerHTML = '';
@@ -329,9 +377,9 @@ const App = () => {
 
     saveToHistory(data);
   }, [
-    getEncodedData, qrSize, qrMargin, errorCorrection, logoSize, logoMargin,
+    getEncodedData, qrSize, qrMargin, errorCorrection, logoScale,
     dotsType, dotsColor, isTransparentBg, bgColor, cornersSquareType,
-    cornersSquareColor, cornersDotType, cornersDotColor, logoDataUrl, saveToHistory
+    cornersSquareColor, cornersDotType, cornersDotColor, compositeLogoUrl, saveToHistory
   ]);
 
   useEffect(() => {
@@ -340,7 +388,32 @@ const App = () => {
     }
   }, [updateQRCode, activeView]);
 
-  // Download QR Image
+  // Real-time Readability & Safety Validation Report
+  const safetyReport: SafetyReport = validateQRLogoSafety(
+    logoScale,
+    errorCorrection,
+    dotsColor,
+    bgColor,
+    Boolean(logoDataUrl)
+  );
+
+  // Auto-Fix Action
+  const handleAutoFix = () => {
+    setErrorCorrection('H');
+    setLogoScale(0.22);
+    setContainerShape('rounded-square');
+    setContainerBg(bgColor === 'transparent' ? '#080705' : bgColor);
+    setContainerPadding(6);
+    setLogoBorderRadius(24);
+    if (safetyReport.contrastRatio < 3.5) {
+      setDotsColor('#EEEEED');
+      setBgColor('#080705');
+      setCornersSquareColor('#EEEEED');
+      setCornersDotColor('#EEEEED');
+    }
+  };
+
+  // Download QR Image (Single Source of Truth)
   const handleDownload = useCallback((format: ExportFormat = exportFormat) => {
     const data = getEncodedData();
     const finalBgColor = isTransparentBg ? 'transparent' : bgColor;
@@ -354,15 +427,15 @@ const App = () => {
       qrOptions: { errorCorrectionLevel: errorCorrection },
       imageOptions: {
         hideBackgroundDots: true,
-        imageSize: logoSize,
-        margin: logoMargin,
+        imageSize: logoScale,
+        margin: 0,
         crossOrigin: 'anonymous',
       },
       dotsOptions: { type: dotsType, color: dotsColor },
       backgroundOptions: { color: finalBgColor },
       cornersSquareOptions: { type: cornersSquareType, color: cornersSquareColor || dotsColor },
       cornersDotOptions: { type: cornersDotType, color: cornersDotColor || dotsColor },
-      image: logoDataUrl || undefined,
+      image: compositeLogoUrl || undefined,
     };
 
     const qrExportInstance = new QRCodeStyling(exportOptions);
@@ -371,9 +444,9 @@ const App = () => {
       extension: format,
     });
   }, [
-    getEncodedData, exportFormat, exportSize, qrMargin, errorCorrection, logoSize, logoMargin,
+    getEncodedData, exportFormat, exportSize, qrMargin, errorCorrection, logoScale,
     dotsType, dotsColor, isTransparentBg, bgColor, cornersSquareType, cornersSquareColor,
-    cornersDotType, cornersDotColor, logoDataUrl
+    cornersDotType, cornersDotColor, compositeLogoUrl
   ]);
 
   // Native Web Share API
@@ -485,7 +558,7 @@ const App = () => {
   }, [getEncodedData]);
 
   // Handle Logo File Upload
-  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -495,8 +568,9 @@ const App = () => {
     }
 
     const reader = new FileReader();
-    reader.onload = (event) => {
-      setLogoDataUrl(event.target?.result as string);
+    reader.onload = async (event) => {
+      const rawUrl = event.target?.result as string;
+      await processUploadedLogo(rawUrl);
     };
     reader.readAsDataURL(file);
   };
@@ -537,24 +611,24 @@ const App = () => {
   };
 
   // Global Full-Page File Drop Handler
-  const handleGlobalFileDrop = useCallback((file: File) => {
+  const handleGlobalFileDrop = useCallback(async (file: File) => {
     if (!file.type.startsWith('image/')) {
       alert('Please drop an image file (PNG, JPG, SVG, WebP)');
       return;
     }
 
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       const dataUrl = event.target?.result as string;
       if (activeView === 'scan') {
         decodeQRFromDataUrl(dataUrl);
       } else {
-        setLogoDataUrl(dataUrl);
+        await processUploadedLogo(dataUrl);
         setCustomizerTab('logo');
       }
     };
     reader.readAsDataURL(file);
-  }, [activeView, decodeQRFromDataUrl]);
+  }, [activeView, decodeQRFromDataUrl, processUploadedLogo]);
 
   // Global Page Drag & Drop Listener
   useEffect(() => {
@@ -624,6 +698,15 @@ const App = () => {
     setDotsType(preset.dotsType);
     setCornersSquareType(preset.cornersSquareType);
     setCornersDotType(preset.cornersDotType);
+  };
+
+  const handleInstallApp = async () => {
+    if (!deferredInstallPrompt) return;
+    deferredInstallPrompt.prompt();
+    const { outcome } = await deferredInstallPrompt.userChoice;
+    if (outcome === 'accepted') {
+      setDeferredInstallPrompt(null);
+    }
   };
 
   return (
@@ -1244,72 +1327,142 @@ const App = () => {
 
                 {/* TAB: Logo */}
                 {customizerTab === 'logo' && (
-                  <div className="space-y-4">
-                    <div className="relative rounded-2xl border border-dashed border-[#3A3A3A] bg-[#080705] p-8 overflow-hidden hover:border-[#EEEEED]/40 transition-all file-upload-grid group text-center">
+                  <div className="space-y-5">
+                    {/* Dropzone Upload */}
+                    <div className="relative rounded-2xl border border-dashed border-[#3A3A3A] bg-[#080705] p-6 overflow-hidden hover:border-[#EEEEED]/40 transition-all file-upload-grid group text-center">
                       <input
                         type="file"
                         accept="image/*"
                         onChange={handleLogoUpload}
                         className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-20"
                       />
-                      <div className="relative z-10 flex flex-col items-center justify-center space-y-4">
-                        <div className="w-16 h-16 rounded-2xl bg-[#3A3A3A]/40 border border-[#3A3A3A] backdrop-blur-md flex items-center justify-center shadow-2xl group-hover:scale-105 transition-transform">
-                          <div className="w-10 h-10 rounded-xl border border-dashed border-[#EEEEED]/40 flex items-center justify-center bg-[#080705]/60">
-                            <Upload className="w-5 h-5 text-[#EEEEED]" />
+                      <div className="relative z-10 flex flex-col items-center justify-center space-y-3">
+                        <div className="w-14 h-14 rounded-2xl bg-[#3A3A3A]/40 border border-[#3A3A3A] backdrop-blur-md flex items-center justify-center shadow-xl group-hover:scale-105 transition-transform">
+                          <div className="w-9 h-9 rounded-xl border border-dashed border-[#EEEEED]/40 flex items-center justify-center bg-[#080705]/60">
+                            <Upload className="w-4 h-4 text-[#EEEEED]" />
                           </div>
                         </div>
-                        <div className="space-y-1">
-                          <h3 className="text-sm font-bold text-[#EEEEED]">Upload file</h3>
-                          <p className="text-xs text-[#a3a3a3]">
-                            Drag or drop your files here or click to upload
+                        <div className="space-y-0.5">
+                          <h3 className="text-xs font-bold text-[#EEEEED]">Upload Logo Image</h3>
+                          <p className="text-[11px] text-[#a3a3a3]">
+                            PNG, SVG, WebP, or JPG supported
                           </p>
                         </div>
                       </div>
                     </div>
 
                     {logoDataUrl && (
-                      <div className="graphite-card rounded-2xl p-4 space-y-3">
-                        <div className="flex items-center justify-between">
+                      <div className="graphite-card rounded-2xl p-4 space-y-4">
+                        {/* Header & Aspect Badge */}
+                        <div className="flex items-center justify-between border-b border-[#3A3A3A] pb-3">
                           <div className="flex items-center gap-3">
-                            <img src={logoDataUrl} alt="Logo Preview" className="w-10 h-10 object-contain rounded-xl bg-white/10 p-1" />
-                            <span className="text-xs font-semibold text-[#EEEEED]">Custom Logo Active</span>
+                            <img 
+                              src={trimmedDataUrl || logoDataUrl} 
+                              alt="Logo Preview" 
+                              className="w-10 h-10 object-contain rounded-xl bg-black/40 border border-[#3A3A3A] p-1" 
+                            />
+                            <div>
+                              <span className="text-xs font-bold text-[#EEEEED] block">Logo Integrated</span>
+                              <span className="text-[10px] text-[#a3a3a3] font-mono">
+                                Aspect Ratio: {logoAspectRatio.toFixed(2)}
+                              </span>
+                            </div>
                           </div>
                           <button
-                            onClick={() => setLogoDataUrl(null)}
-                            className="px-3 py-1.5 rounded-xl bg-red-500/20 text-red-300 text-xs font-semibold hover:bg-red-500/30"
+                            onClick={() => {
+                              setLogoDataUrl(null);
+                              setTrimmedDataUrl(null);
+                              setCompositeLogoUrl(null);
+                            }}
+                            className="px-3 py-1.5 rounded-xl bg-red-500/20 text-red-300 text-xs font-semibold hover:bg-red-500/30 flex items-center gap-1"
                           >
+                            <Trash2 className="w-3.5 h-3.5" />
                             Remove
                           </button>
                         </div>
 
+                        {/* Protection Container Shape */}
                         <div>
-                          <div className="flex justify-between text-xs text-[#a3a3a3] mb-1">
-                            <span>Logo Scale Ratio</span>
-                            <span>{Math.round(logoSize * 100)}%</span>
+                          <label className="text-xs font-bold text-[#EEEEED] uppercase tracking-wider mb-2 block">
+                            Protective Container Shape
+                          </label>
+                          <div className="grid grid-cols-4 gap-2">
+                            {[
+                              { id: 'rounded-square', label: 'Rounded' },
+                              { id: 'circle', label: 'Circle' },
+                              { id: 'square', label: 'Square' },
+                              { id: 'transparent', label: 'None' },
+                            ].map((shape) => (
+                              <button
+                                key={shape.id}
+                                onClick={() => setContainerShape(shape.id as ContainerShape)}
+                                className={`p-2 rounded-xl text-xs font-semibold text-center transition-all ${
+                                  containerShape === shape.id ? 'graphite-pill-active' : 'graphite-pill'
+                                }`}
+                              >
+                                {shape.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Container Background Color */}
+                        {containerShape !== 'transparent' && (
+                          <div>
+                            <label className="text-xs font-semibold text-[#EEEEED] mb-1.5 block">
+                              Container Shield Color
+                            </label>
+                            <div className="flex items-center gap-3">
+                              <input
+                                type="color"
+                                value={containerBg}
+                                onChange={(e) => setContainerBg(e.target.value)}
+                                className="w-9 h-9 rounded-xl cursor-pointer border-0 bg-transparent"
+                              />
+                              <div className="flex gap-1.5">
+                                {['#080705', '#3A3A3A', '#EEEEED', '#ffffff'].map((hex) => (
+                                  <button
+                                    key={hex}
+                                    onClick={() => setContainerBg(hex)}
+                                    className="w-7 h-7 rounded-lg border border-white/20 shadow-sm transition-transform hover:scale-110"
+                                    style={{ backgroundColor: hex }}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Logo Scale Slider */}
+                        <div>
+                          <div className="flex justify-between text-xs font-semibold text-[#EEEEED] mb-1">
+                            <span>Logo Area Size</span>
+                            <span className="font-mono">{Math.round(logoScale * 100)}%</span>
                           </div>
                           <input
                             type="range"
-                            min="0.1"
-                            max="0.38"
+                            min="0.10"
+                            max="0.32"
                             step="0.01"
-                            value={logoSize}
-                            onChange={(e) => setLogoSize(parseFloat(e.target.value))}
+                            value={logoScale}
+                            onChange={(e) => setLogoScale(parseFloat(e.target.value))}
                             className="w-full accent-[#EEEEED]"
                           />
                         </div>
 
+                        {/* Container Inner Padding Slider */}
                         <div>
-                          <div className="flex justify-between text-xs text-[#a3a3a3] mb-1">
-                            <span>Logo Quiet Zone Margin</span>
-                            <span>{logoMargin}px</span>
+                          <div className="flex justify-between text-xs font-semibold text-[#EEEEED] mb-1">
+                            <span>Container Quiet Zone Padding</span>
+                            <span className="font-mono">{containerPadding}px</span>
                           </div>
                           <input
                             type="range"
                             min="0"
-                            max="10"
+                            max="16"
                             step="1"
-                            value={logoMargin}
-                            onChange={(e) => setLogoMargin(Number(e.target.value))}
+                            value={containerPadding}
+                            onChange={(e) => setContainerPadding(Number(e.target.value))}
                             className="w-full accent-[#EEEEED]"
                           />
                         </div>
@@ -1382,7 +1535,7 @@ const App = () => {
                         ].map((item) => (
                           <button
                             key={item.id}
-                            onClick={() => setErrorCorrection(item.id as any)}
+                            onClick={() => setErrorCorrection(item.id as ErrorCorrectionLevel)}
                             className={`p-2 rounded-2xl text-xs font-semibold text-center transition-all ${
                               errorCorrection === item.id ? 'graphite-pill-active' : 'graphite-pill'
                             }`}
@@ -1416,6 +1569,65 @@ const App = () => {
                     ref={previewRef} 
                     className="w-full h-full flex items-center justify-center"
                   />
+                </div>
+
+                {/* Readability & Safety Validation Panel */}
+                <div className="w-full text-left graphite-card rounded-2xl p-4 space-y-3 border-white/10">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-[#EEEEED] flex items-center gap-1.5">
+                      <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                      Readability & Safety Audit
+                    </span>
+                    {(!safetyReport.isLogoSizeSafe || !safetyReport.isContrastSafe || !safetyReport.isECSafe) && (
+                      <button
+                        onClick={handleAutoFix}
+                        className="btn-platinum px-2.5 py-1 rounded-xl text-[11px] font-bold flex items-center gap-1 shadow-md hover:scale-105"
+                      >
+                        <Wrench className="w-3 h-3 text-[#080705]" />
+                        <span>Auto Fix</span>
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-1.5 text-[10px] font-semibold text-center">
+                    {/* Badge 1: Logo Size */}
+                    <div className={`p-1.5 rounded-xl border ${
+                      safetyReport.isLogoSizeSafe
+                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                        : 'bg-amber-500/10 text-amber-300 border-amber-500/20'
+                    }`}>
+                      {safetyReport.isLogoSizeSafe ? '✓ Logo Safe' : '⚠ Logo Large'}
+                    </div>
+
+                    {/* Badge 2: Contrast */}
+                    <div className={`p-1.5 rounded-xl border ${
+                      safetyReport.isContrastSafe
+                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                        : 'bg-amber-500/10 text-amber-300 border-amber-500/20'
+                    }`}>
+                      {safetyReport.isContrastSafe ? '✓ Contrast Safe' : '⚠ Low Contrast'}
+                    </div>
+
+                    {/* Badge 3: EC Level */}
+                    <div className={`p-1.5 rounded-xl border ${
+                      safetyReport.isECSafe
+                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                        : 'bg-amber-500/10 text-amber-300 border-amber-500/20'
+                    }`}>
+                      {safetyReport.isECSafe ? `✓ EC Level (${errorCorrection})` : `⚠ Upgrade EC`}
+                    </div>
+                  </div>
+
+                  {safetyReport.warnings.length > 0 && (
+                    <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-300 space-y-1">
+                      {safetyReport.warnings.map((warn, i) => (
+                        <div key={i} className="flex items-start gap-1.5">
+                          <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                          <span>{warn}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Export & Sharing Suite */}
