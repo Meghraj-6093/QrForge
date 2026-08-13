@@ -190,20 +190,23 @@
   background: #EEEEED;
 }
 
-/* Print Layout Styles */
+/* Dedicated Physical Card Print Styles */
 @media print {
-  body {
+  html, body {
     background: #ffffff !important;
     color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
-  header, footer, .no-print {
+  header, footer, main, .no-print, .palette-bg {
     display: none !important;
   }
-  .print-only-container {
+  .print-only-card {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    height: 100vh !important;
+    min-height: 100vh !important;
+    width: 100% !important;
   }
 }

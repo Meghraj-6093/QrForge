@@ -43,6 +43,7 @@ import {
 import { ExportResolutionSelect, EXPORT_RESOLUTIONS } from './components/ExportResolutionSelect';
 import { normalizeUrlInput } from './utils/urlNormalizer';
 import { BackgroundRippleEffect } from './components/ui/background-ripple-effect';
+import { PrintQRCard } from './components/PrintQRCard';
 
 type MainView = 'create' | 'scan' | 'history';
 type ContentType = 'url' | 'text' | 'wifi' | 'vcard' | 'event' | 'email' | 'phone' | 'whatsapp';
@@ -726,8 +727,13 @@ const App = () => {
     };
   }, [handleGlobalFileDrop]);
 
-  // Print QR Card
+  // Print Dedicated Physical QR Card
   const handlePrint = () => {
+    const { data, isValid } = getEncodedData();
+    if (!isValid || !data) {
+      alert('Please enter a valid URL or content before printing the QR card.');
+      return;
+    }
     window.print();
   };
 
@@ -2074,6 +2080,25 @@ const App = () => {
         </div>
       </footer>
       </div>
+
+      {/* Dedicated Physical Printable Card Component (Hidden on web, visible only during window.print()) */}
+      <PrintQRCard
+        contentType={contentType}
+        data={getEncodedData().data}
+        dotsColor={dotsColor}
+        bgColor={bgColor}
+        isTransparentBg={isTransparentBg}
+        dotsType={dotsType}
+        cornersSquareType={cornersSquareType}
+        cornersSquareColor={cornersSquareColor}
+        cornersDotType={cornersDotType}
+        cornersDotColor={cornersDotColor}
+        errorCorrection={errorCorrection}
+        qrMargin={qrMargin}
+        logoScale={logoScale}
+        compositeLogoUrl={compositeLogoUrl}
+        wifiSSID={wifiSSID}
+      />
     </div>
   );
 };
