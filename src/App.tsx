@@ -390,8 +390,8 @@ const App = () => {
       const img = new Image();
       img.onload = async () => {
         const canvas = document.createElement('canvas');
-        canvas.width = 1024;
-        canvas.height = 1024;
+        canvas.width = exportSize;
+        canvas.height = exportSize;
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
@@ -404,7 +404,7 @@ const App = () => {
 
         canvas.toBlob(async (blob) => {
           if (!blob) return;
-          const file = new File([blob], 'qrforge-code.png', { type: 'image/png' });
+          const file = new File([blob], `qrforge-${exportSize}px.png`, { type: 'image/png' });
 
           if (navigator.canShare && navigator.canShare({ files: [file] })) {
             try {
@@ -426,7 +426,7 @@ const App = () => {
     } catch (err) {
       console.error(err);
     }
-  }, [isTransparentBg, bgColor, getEncodedData]);
+  }, [isTransparentBg, bgColor, getEncodedData, exportSize]);
 
   // Copy Image to Clipboard
   const handleCopyImageToClipboard = useCallback(async () => {
@@ -443,8 +443,8 @@ const App = () => {
       const img = new Image();
       img.onload = async () => {
         const canvas = document.createElement('canvas');
-        canvas.width = qrSize * 2;
-        canvas.height = qrSize * 2;
+        canvas.width = exportSize;
+        canvas.height = exportSize;
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
@@ -472,7 +472,7 @@ const App = () => {
     } catch (err) {
       console.error(err);
     }
-  }, [qrSize, isTransparentBg, bgColor]);
+  }, [exportSize, isTransparentBg, bgColor]);
 
   // Copy Data Link
   const handleCopyLink = useCallback(() => {
@@ -1208,8 +1208,24 @@ const App = () => {
                 {customizerTab === 'specs' && (
                   <div className="space-y-4">
                     <div>
+                      <label className="text-xs font-bold text-[#EEEEED] uppercase tracking-wider mb-2 block">
+                        Export Resolution Quality
+                      </label>
+                      <select
+                        value={exportSize}
+                        onChange={(e) => setExportSize(Number(e.target.value))}
+                        className="graphite-input w-full px-4 py-2.5 rounded-2xl text-xs font-semibold"
+                      >
+                        <option value={512} className="bg-[#080705] text-[#EEEEED]">Standard (512 x 512 px)</option>
+                        <option value={1024} className="bg-[#080705] text-[#EEEEED]">High Res (1024 x 1024 px)</option>
+                        <option value={2048} className="bg-[#080705] text-[#EEEEED]">Ultra HD (2048 x 2048 px)</option>
+                        <option value={4096} className="bg-[#080705] text-[#EEEEED]">4K Print (4096 x 4096 px)</option>
+                      </select>
+                    </div>
+
+                    <div>
                       <div className="flex justify-between text-xs font-semibold text-[#EEEEED] mb-1.5">
-                        <span>Preview Size</span>
+                        <span>Preview Canvas Display Size</span>
                         <span>{qrSize}px</span>
                       </div>
                       <input
