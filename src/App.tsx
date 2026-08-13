@@ -757,22 +757,13 @@ const App = () => {
                 QRForge
               </h1>
               <p className="text-xs text-[#a3a3a3] hidden sm:block">
-                Privacy-First QR Code Studio
+                QR Code Studio
               </p>
             </div>
           </div>
 
           {/* Header Action Controls */}
           <div className="flex items-center gap-2.5">
-            {/* Privacy Assurance Trigger */}
-            <button
-              onClick={() => setShowPrivacyModal(true)}
-              className="btn-graphite px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 text-emerald-400 hover:border-emerald-500/40"
-            >
-              <ShieldCheck className="w-4 h-4" />
-              <span className="hidden sm:inline">Privacy & Security</span>
-            </button>
-
             {/* PWA Install Button */}
             {deferredInstallPrompt && !isAppInstalled && (
               <button
@@ -1963,11 +1954,7 @@ const App = () => {
           <p className="flex items-center gap-1.5">
             <span>QRForge</span>
             <span>•</span>
-            <span>Privacy-First & On-Device</span>
-            <span>•</span>
-            <span className="text-emerald-400 flex items-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5" /> Client-Side Only
-            </span>
+            <span>QR Code Studio</span>
           </p>
 
           {deferredInstallPrompt && !isAppInstalled && (
