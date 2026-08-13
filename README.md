@@ -1,171 +1,275 @@
-# QRForge - Privacy-First QR Generator
+# QRForge - Privacy-First QR Code Generator
 
-A beautiful, privacy-first QR code generator built with React, TypeScript, and Tailwind CSS that runs entirely in the browser.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![React Version](https://img.shields.io/badge/React-19-blue)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-%3E%3D5.0-blue)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.3.3-38bdf8)](https://tailwindcss.com/)
+[![Vite](https://img.shields.io/badge/Vite-8.2.0-646cff)](https://vitejs.dev/)
 
-## Features
+A beautiful, privacy-first QR code generator built with React, TypeScript, and Tailwind CSS that runs entirely in the browser. Create stunning, customizable QR codes without compromising your privacy — no servers, no tracking, no data collection.
 
-���🔗 **URL → QR Generation** - Convert any URL or text to QR code
-���🎨 **Custom Colors** - Fully customizable foreground and background colors
-���📐 **Size & Margin Controls** - Adjust QR code size and quiet zone margin
-���🖼��️ **Logo Upload** - Add your own logo to the center of the QR code
-��✨ **Multiple QR Styles** - Classic, Rounded, Dots, and Square styles
-���🎯 **Pattern Customization** - Customize finder patterns and corner patterns
-���📱 **Live Responsive Preview** - See your QR code update in real-time
-���🧩 **Presets** - Ready-to-use designs for Portfolio, Instagram, Business Card, Poster, and Minimal
-���📝 **Multiple QR Types** - Support for URL, Text, Email, Phone, WhatsApp, and Wi-Fi
-���🧠 **Readability Protection** - Built-in contrast and safety checking
-���📥 **Multiple Export Formats** - Download as PNG, SVG, or WebP
-���📋 **Copy to Clipboard** - Copy the input URL/text with one click
-���🏷��️ **Smart Filenames** - Auto-generated descriptive filenames
-���🔒 **100% Browser-Side** - No accounts, servers, databases, or image uploads required
+## � ✨ Features
 
-## Technology Stack
+- **���🔗 URL & Text Conversion** - Transform any URL or text into a QR code instantly
+- **���🎨 Full Customization** - Adjust colors, size, margin, and error correction levels
+- **���🖼��️ Logo Integration** - Upload and embed your own logo with automatic safety validation
+- **��✨ Multiple Styles** - Choose from Classic, Rounded, Dots, and Square QR module styles
+- **���🎯 Pattern Customization** - Personalize finder patterns, corner patterns, and gradients
+- **���📱 Live Preview** - Real-time updates as you customize your QR code
+- **���🎨 Designer Presets** - One-click styles for Portfolio, Instagram, Business Card, Poster, and Minimal themes
+- **���📋 Multiple Data Types** - Generate QR codes for URLs, Text, Email, Phone, WhatsApp, Wi-Fi, and more
+- **���🛡��️ Privacy First** - 100% client-side processing — zero data leaves your browser
+- **���📥 Flexible Export** - Download as PNG, SVG, WebP, or JPEG with customizable resolution
+- **���📋 Smart Clipboard** - One-click copying of input data and generated QR codes
+- **���🏷��️ Intelligent Filenames** - Auto-generated descriptive filenames based on content
+- **��⚠��️ Readability Protection** - Built-in contrast checking and safety validation
+- **���🌓 Dark/Light Mode** - Seamless theme switching with system preference detection
 
-- **Framework**: React 19 with TypeScript
-- **Styling**: Tailwind CSS with dark mode support
-- **QR Generation**: `qr-code-styling` library
-- **Icons**: Lucide React
-- **Build Tool**: Vite
-- **Browser APIs**: Canvas, Blob, FileReader, Clipboard API
+## �� 🛠��️ Technology Stack
 
-## Getting Started
+- **Framework**: React 19 with TypeScript 5.0+
+- **Styling**: Tailwind CSS 4.3.3 with dark mode support
+- **QR Generation**: [qr-code-styling](https://github.com/qr-code-styling/qr-code-styling) (v1.9.2)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Build Tool**: Vite 8.2.0
+- **Browser APIs**: Canvas, Blob, FileReader, Clipboard API, MutationObserver
+- **Utilities**: URL normalization, chroma-key logo processing, export resolution scaling
+
+## �� 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js 18+ 
-- npm or yarn
+- Package manager (npm, pnpm, or yarn)
 
 ### Installation
+
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/QrForge.git
+git clone https://github.com/Meghraj-6093/QrForge.git
 cd QrForge
 
-# Install dependencies
+# Install dependencies (using pnpm as in the lockfile)
+pnpm install
+# or
 npm install
+```
 
-# Start development server
+### Development Server
+
+```bash
+# Start the development server with hot reload
+pnpm dev
+# or
 npm run dev
+```
 
-# Build for production
+Open [http://localhost:5173](http://localhost:5173) to view the application.
+
+### Production Build
+
+```bash
+# Create an optimized production build
+pnpm build
+# or
 npm run build
 ```
 
-## Usage
+Preview the production build locally:
+```bash
+pnpm preview
+# or
+npm run preview
+```
 
-1. **Enter your URL or text** in the input field
-2. **Customize your QR code** using the options panel:
-   - Adjust size and margin
-   - Choose foreground/background colors
-   - Select QR style (Classic, Rounded, Dots, Square)
-   - Upload a logo (optional)
-   - Apply presets for quick styling
-3. **Preview updates in real-time** as you make changes
-4. **Download your QR code** in PNG, SVG, or WebP format
-5. **Copy the original URL/text** to clipboard with one click
+## �� 🔒 Privacy First
 
-## Privacy First
+QRForge is engineered with privacy as a foundational principle:
 
-QRForge is designed with privacy as the core principle:
-- All processing happens in your browser
-- No data is sent to any server
-- No analytics or tracking
-- No account required
-- Your QR codes and logos never leave your device
+- **���🌐 100% Browser-Side** - All processing occurs client-side using Web APIs
+- **���🚫 No External Requests** - Zero network traffic to any servers or analytics endpoints
+- **���🛡��️ Data Sovereignty** - Your QR codes, logos, and input data never leave your device
+- **���🔒 No Accounts Required** - No registration, login, or personal data collection
+- **���📭 No Tracking** - Absent of cookies, localStorage usage, or fingerprinting techniques
 
-## Project Structure
+## �� 📁 Project Structure
 
 ```
 QrForge/
 ├── src/
-│   ├── App.tsx          # Main application component
-│   ├── main.tsx         # Entry point
-│   ├── index.css        # Global styles
-│   └── assets/          # Static assets
+│   ├── App.tsx          # Main application component with state management
+│   ├── main.tsx         # React DOM entry point
+│   ├── index.css        # Global CSS styles and Tailwind directives
+│   ├── assets/          # Static assets (icons, logos)
+│   ├── components/
+│   │   ├── ExportResolutionSelect.tsx  # Export quality selector
+│   │   └── ui/
+│   │       └── background-ripple-effect.tsx  # Animated background layer
+│   └── utils/
+│       ├── qrLogoEngine.ts     # Logo processing, safety validation, and chroma-keying
+│       ├── urlNormalizer.ts    # Input URL standardization and validation
+│       └── urlNormalizer.test.ts # Unit tests for URL normalization
 ├── public/
-│   ├── favicon.svg      # Browser favicon
-│   └── icons.svg        # Application icons
-├── dist/                # Production build output
-├── package.json         # Dependencies and scripts
-├── tailwind.config.cjs  # Tailwind configuration
-├── postcss.config.cjs   # PostCSS configuration
-�└── vite.config.ts       # Vite configuration
+│   ├── favicon.svg      # Browser tab icon
+│   └── icons.svg        # Application icon sprite
+├── dist/                # Production build output (generated)
+├── package.json         # Project dependencies and scripts
+├── tailwind.config.cjs  # Tailwind CSS configuration
+├── postcss.config.cjs   # PostCSS plugin configuration
+├── tsconfig.json        # TypeScript compiler configuration
+├── vite.config.ts       # Vite build configuration
+├── .oxlintrc.json       # Oxlint configuration for code quality
+�└── LICENSE              # MIT license text
 ```
 
-## Customization Options
+## �� 🎨 Customization Options
 
-### QR Styles
-- **Classic**: Traditional square modules
-- **Rounded**: Rounded modules for softer appearance
-- **Dots**: Circular modules
-- **Square**: Square modules with gaps
+### QR Module Styles
+- **Classic**: Traditional square modules for maximum compatibility
+- **Rounded**: Soft, rounded modules for a friendly appearance
+- **Dots**: Circular modules creating a minimalist, modern look
+- **Square**: Square modules with internal gaps for a technical aesthetic
 
 ### Pattern Customization
-- Finder patterns (the three large squares in corners)
-- Corner patterns (individual corner markers)
-- Color customization for all elements
+- **Finder Patterns**: Modify the three large position detection squares
+- **Alignment Patterns**: Customize the smaller square in the bottom-right (for higher versions)
+- **Timing Patterns**: Adjust the alternating dark/light lines between finder patterns
+- **Format Information**: Personalize the error correction and mask pattern areas
+
+### Color & Appearance
+- **Foreground/Background**: Independent color selection with contrast validation
+- **Gradient Support**: Apply linear or radial gradients to modules and patterns
+- **Transparent Background**: Option for see-through QR codes (scannability may vary)
+- **Quiet Zone**: Adjustable margin (whitespace border) around the QR code
 
 ### Presets
-- **Portfolio**: Professional dark theme with accent color
-- **Instagram**: Gradient-inspired vibrant design
-- **Business Card**: Corporate dark theme with gold accent
-- **Poster**: High-contrast dark theme for visibility
-- **Minimal**: Clean black-on-white design
+- **Portfolio**: Professional dark theme with cyan accent
+- **Instagram**: Vibrant gradient-inspired design (purple to pink)
+- **Business Card**: Elegant dark theme with gold accent
+- **Poster**: Maximum contrast dark theme for long-distance scanning
+- **Minimal**: Pure black-on-white classic design
+- **Custom**: Save and reuse your own style combinations
 
 ### Export Formats
-- **PNG**: Raster image for general use
-- **SVG**: Vector format for scaling without quality loss
-- **WebP**: Modern format with superior compression
+- **PNG**: Universal raster format with configurable resolution (72-300 DPI)
+- **SVG**: Infinite-resolution vector format ideal for print and scaling
+- **WebP**: Modern format with superior compression (lossless and lossy modes)
+- **JPEG**: Photographic format for complex QR designs with gradients
 
-## Browser Support
+## �� 🌐 Browser Support
 
-QRForge works in all modern browsers that support:
-- Canvas API
-- Blob API
-- FileReader API
-- Clipboard API
-- CSS Custom Properties (for dark mode)
+QRForge supports all modern browsers that implement the following APIs:
+- Canvas 2D Rendering Context
+- Blob Construction and Slicing
+- FileReader for image loading
+- Clipboard API for read/write operations
+- CSS Custom Properties (for theme variables)
+- MutationObserver (for potential future extensions)
 
-Tested and working in:
-- Chrome 90+
-- Firefox 88+
-- Safari 14+
-- Edge 90+
+**Tested and verified in:**
+- Chrome 90+ (Desktop and Android)
+- Firefox 88+ (Desktop and Android)
+- Safari 14+ (macOS and iOS)
+- Edge 90+ (Desktop and Android)
+- Opera 75+ (Desktop)
 
-## Development
+## �� 👨‍���💻 Development
 
 ### Available Scripts
-- `npm run dev` - Start development server with hot reload
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build locally
+- `pnpm dev` or `npm run dev` - Start development server with hot module replacement
+- `pnpm build` or `npm run build` - Production build with TypeScript compilation and minification
+- `pnpm preview` or `npm run preview` - Locally preview the production build
+- `pnpm lint` or `npm run lint` - Code quality checks using Oxlint
 
-### Code Structure
-The main application logic is in `src/App.tsx` which includes:
-- State management for all QR code properties
-- QR code generation using `qr-code-styling`
-- Image handling for logo upload
-- Export functionality for PNG/SVG/WebP
-- Theme switching (dark/light)
-- Responsive layout
+### Code Organization
+The application follows a modular architecture separating concerns:
 
-## Contributing
+1. **State Management** (`App.tsx`) - Centralized React state for all QR properties
+2. **Utility Modules** (`src/utils/`) - Pure functions for URL handling, logo processing, and validation
+3. **Component Library** (`src/components/`) - Reusable UI components with Tailwind styling
+4. **Asset Processing** - Logo upload handling with automatic chroma-key transparency and safety margins
+5. **Export Pipeline** - Multi-format generation using Canvas (PNG/JPEG/WebP) and SVG serialization
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+### State Properties
+The QR code configuration is managed through these key state slices:
+- `content`: Input data (URL/text/email/etc.) after normalization
+- `size`: Pixel dimensions of the QR code matrix
+- `margin`: Quiet zone width in modules
+- `color`: Foreground and background colors (with gradient support)
+- `options`: QRCodeStyling configuration object (style, pattern customization, etc.)
+- `logo`: Processed logo image data with safety validation
+- `export`: Selected format and resolution for download
+- `theme`: Current color scheme (light/dark/system)
 
-## License
+## �� 🤝 Contributing
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+We welcome contributions that enhance privacy, usability, or feature completeness. Please follow these guidelines:
 
-## Acknowledgments
+1. **Fork the Repository** - Create your personal fork on GitHub
+2. **Create a Feature Branch** - Use descriptive naming: `git checkout -b feature/your-feature-name`
+3. **Make Your Changes** - Ensure code follows existing TypeScript and Tailwind conventions
+4. **Add Tests** - Include unit tests for new utility functions when applicable
+5. **Commit Your Changes** - Write clear, descriptive commit messages
+6. **Push to Your Fork** - `git push origin feature/your-feature-name`
+7. **Open a Pull Request** - Target the `main` branch with a detailed description
 
-- [qr-code-styling](https://github.com/qr-code-styling/qr-code-styling) for the QR generation library
-- [Tailwind CSS](https://tailwindcss.com/) for the utility-first CSS framework
-- [Lucide](https://lucide.dev/) for the beautiful icons
-- [Vite](https://vitejs.dev/) for the fast build tool
+### Development Guidelines
+- Maintain 100% client-side privacy - no additional network requests
+- Keep dependencies minimal and well-justified
+- Follow the existing code style and component patterns
+- Ensure new features work in all supported browsers
+- Update documentation for any user-facing changes
+
+### Reporting Issues
+Please use the GitHub Issues tracker to report bugs or request features. Include:
+- Browser version and operating system
+- Steps to reproduce the issue
+- Expected vs. actual behavior
+- Screenshots or screen recordings when helpful
+
+## �� 📄 License
+
+QRForge is released under the [MIT License](LICENSE).
+
+```
+MIT License
+
+Copyright (c) 2023 Meghraj-6093
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+```
+
+## �� 🙏 Acknowledgments
+
+- [qr-code-styling](https://github.com/qr-code-styling/qr-code-styling) - For the powerful QR code generation and styling library
+- [Tailwind CSS](https://tailwindcss.com/) - For the utility-first CSS framework enabling rapid UI development
+- [Lucide](https://lucide.dev/) - For the beautiful, consistent icon set
+- [Vite](https://vitejs.dev/) - For the lightning-fast build tool and development server
+- [React](https://reactjs.org/) and [TypeScript](https://www.typescriptlang.org/) - For the robust frontend foundation
+
+## �� 📬 Contact
+
+**Meghraj** - GitHub: [@Meghraj-6093](https://github.com/Meghraj-6093)  
+Email: meghrajravani@gmail.com  
+
+If you find QRForge useful, please consider giving it a �� ⭐ on [GitHub](https://github.com/Meghraj-6093/QrForge)!
 
 ---
 
-**QRForge** - Making QR code generation beautiful, private, and accessible to everyone.
+*Built with �� ❤��️ and �� 🔒 - Privacy isn't just a feature, it's the foundation.*
