@@ -1135,21 +1135,25 @@ const App = () => {
                 {/* TAB: Logo */}
                 {customizerTab === 'logo' && (
                   <div className="space-y-4">
-                    <div className="border-2 border-dashed border-[#3A3A3A] rounded-3xl p-6 text-center hover:border-[#EEEEED]/50 transition-colors relative">
+                    <div className="relative rounded-2xl border border-dashed border-[#3A3A3A] bg-[#080705] p-8 overflow-hidden hover:border-[#EEEEED]/40 transition-all file-upload-grid group text-center">
                       <input
                         type="file"
                         accept="image/*"
                         onChange={handleLogoUpload}
                         className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-20"
                       />
-                      <div className="flex flex-col items-center">
-                        <Upload className="w-8 h-8 text-[#EEEEED] mb-2" />
-                        <p className="text-xs font-bold text-[#EEEEED]">
-                          Upload Custom Logo
-                        </p>
-                        <p className="text-[11px] text-[#a3a3a3] mt-1">
-                          PNG, SVG, or JPG supported
-                        </p>
+                      <div className="relative z-10 flex flex-col items-center justify-center space-y-4">
+                        <div className="w-16 h-16 rounded-2xl bg-[#3A3A3A]/40 border border-[#3A3A3A] backdrop-blur-md flex items-center justify-center shadow-2xl group-hover:scale-105 transition-transform">
+                          <div className="w-10 h-10 rounded-xl border border-dashed border-[#EEEEED]/40 flex items-center justify-center bg-[#080705]/60">
+                            <Upload className="w-5 h-5 text-[#EEEEED]" />
+                          </div>
+                        </div>
+                        <div className="space-y-1">
+                          <h3 className="text-sm font-bold text-[#EEEEED]">Upload file</h3>
+                          <p className="text-xs text-[#a3a3a3]">
+                            Drag or drop your files here or click to upload
+                          </p>
+                        </div>
                       </div>
                     </div>
 
@@ -1386,17 +1390,25 @@ const App = () => {
                 </p>
               </div>
 
-              <div className="border-2 border-dashed border-[#3A3A3A] rounded-3xl p-8 relative hover:border-[#EEEEED]/50 transition-colors">
+              <div className="relative rounded-2xl border border-dashed border-[#3A3A3A] bg-[#080705] p-10 overflow-hidden hover:border-[#EEEEED]/40 transition-all file-upload-grid group text-center">
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleScanImageUpload}
                   className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-20"
                 />
-                <div className="flex flex-col items-center">
-                  <Upload className="w-10 h-10 text-[#EEEEED] mb-3" />
-                  <p className="text-sm font-bold text-[#EEEEED]">Drag & Drop QR Image Here</p>
-                  <p className="text-xs text-[#a3a3a3] mt-1">PNG, JPG, WebP, or SVG</p>
+                <div className="relative z-10 flex flex-col items-center justify-center space-y-4">
+                  <div className="w-20 h-20 rounded-2xl bg-[#3A3A3A]/40 border border-[#3A3A3A] backdrop-blur-md flex items-center justify-center shadow-2xl group-hover:scale-105 transition-transform">
+                    <div className="w-12 h-12 rounded-xl border border-dashed border-[#EEEEED]/40 flex items-center justify-center bg-[#080705]/60">
+                      <Upload className="w-6 h-6 text-[#EEEEED]" />
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="text-base font-bold text-[#EEEEED]">Upload file</h3>
+                    <p className="text-xs text-[#a3a3a3]">
+                      Drag or drop your files here or click to upload
+                    </p>
+                  </div>
                 </div>
               </div>
 
