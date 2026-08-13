@@ -42,6 +42,7 @@ import {
   type SafetyReport
 } from './utils/qrLogoEngine';
 import { ExportResolutionSelect, EXPORT_RESOLUTIONS } from './components/ExportResolutionSelect';
+import { normalizeUrlInput } from './utils/urlNormalizer';
 
 type MainView = 'create' | 'scan' | 'history';
 type ContentType = 'url' | 'text' | 'wifi' | 'vcard' | 'event' | 'email' | 'phone' | 'whatsapp';
@@ -281,10 +282,8 @@ const App = () => {
   const getEncodedData = useCallback((): string => {
     switch (contentType) {
       case 'url':
-        if (!rawText.trim()) return 'https://github.com';
-        return rawText.startsWith('http://') || rawText.startsWith('https://') 
-          ? rawText 
-          : `https://${rawText}`;
+        const urlRes = normalizeUrlInput(rawText);
+        return urlRes.normalizedUrl || 'https://github.com';
       case 'text':
         return rawText || 'QRForge — Privacy-First QR Code';
       case 'wifi':
@@ -549,14 +548,7 @@ const App = () => {
     }
   }, [exportSize, isTransparentBg, bgColor]);
 
-  // Copy Data Link
-  const handleCopyLink = useCallback(() => {
-    const data = getEncodedData();
-    navigator.clipboard.writeText(data).then(() => {
-      setCopiedState(true);
-      setTimeout(() => setCopiedState(false), 2000);
-    });
-  }, [getEncodedData]);
+
 
   // Handle Logo File Upload
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -876,27 +868,69 @@ const App = () => {
                 {/* Input Fields */}
                 <div className="space-y-4 pt-1">
                   {contentType === 'url' && (
-                    <div>
-                      <div className="flex justify-between items-center mb-1.5">
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center mb-1">
                         <label className="text-xs font-medium text-[#EEEEED] block">Target Website Link</label>
-                        <span className="text-[10px] text-[#a3a3a3]">{rawText.length} characters</span>
+                        <span className="text-[10px] font-mono text-[#a3a3a3]">{rawText.length} characters</span>
                       </div>
                       <div className="flex gap-2">
                         <input
-                          type="url"
+                          type="text"
                           value={rawText}
                           onChange={(e) => setRawText(e.target.value)}
-                          placeholder="https://yourwebsite.com"
-                          className="graphite-input flex-1 px-4 py-3 rounded-2xl text-sm"
+                          placeholder="hyperionweb.vercel.app or github.com"
+                          className={`graphite-input flex-1 px-4 py-3 rounded-2xl text-sm ${
+                            normalizeUrlInput(rawText).status === 'invalid' ? 'border-amber-500/60 focus:border-amber-500' : ''
+                          }`}
                         />
                         <button
-                          onClick={handleCopyLink}
-                          className="btn-graphite px-4 py-3 rounded-2xl text-xs font-semibold flex items-center gap-1.5"
+                          onClick={() => {
+                            const urlResult = normalizeUrlInput(rawText);
+                            navigator.clipboard.writeText(urlResult.normalizedUrl || rawText);
+                            setCopiedState(true);
+                            setTimeout(() => setCopiedState(false), 2000);
+                          }}
+                          className="btn-graphite px-4 py-3 rounded-2xl text-xs font-semibold flex items-center gap-1.5 shrink-0"
+                          title="Copy Normalized URL"
                         >
                           {copiedState ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-                          <span>{copiedState ? 'Copied' : 'Copy'}</span>
+                          <span>{copiedState ? 'Copied' : 'Copy URL'}</span>
                         </button>
                       </div>
+
+                      {/* Real-time UX Indicator & Helper Text */}
+                      {(() => {
+                        const norm = normalizeUrlInput(rawText);
+                        return (
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between text-xs pt-1 gap-1 px-1">
+                            <div className="flex items-center gap-1.5 font-mono text-[11px] truncate">
+                              {norm.status === 'valid' && (
+                                <span className="text-emerald-400 flex items-center gap-1 font-semibold">
+                                  <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                                  Valid website address
+                                </span>
+                              )}
+                              {norm.status === 'missing_protocol' && (
+                                <span className="text-emerald-400 flex items-center gap-1 font-semibold truncate">
+                                  <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                                  <span className="text-[#a3a3a3]">Encoded:</span>
+                                  <code className="bg-[#3A3A3A]/40 px-1.5 py-0.5 rounded text-[#EEEEED] font-mono truncate">{norm.normalizedUrl}</code>
+                                </span>
+                              )}
+                              {norm.status === 'invalid' && (
+                                <span className="text-amber-400 flex items-center gap-1 font-semibold">
+                                  <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+                                  Please enter a valid domain or URL
+                                </span>
+                              )}
+                            </div>
+
+                            <span className="text-[10px] text-[#a3a3a3] italic shrink-0">
+                              HTTPS is added automatically when needed.
+                            </span>
+                          </div>
+                        );
+                      })()}
                     </div>
                   )}
 
