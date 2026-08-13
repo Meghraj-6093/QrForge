@@ -1221,27 +1221,117 @@ const App = () => {
 
                 {/* TAB: Presets */}
                 {customizerTab === 'presets' && (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    {PALETTE_PRESETS.map((preset) => (
-                      <button
-                        key={preset.id}
-                        onClick={() => applyPreset(preset)}
-                        className="btn-graphite p-3.5 rounded-2xl text-left flex flex-col justify-between h-22 hover:border-[#EEEEED]/40"
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-[#EEEEED]">
-                            {preset.name}
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                      {PALETTE_PRESETS.map((preset) => (
+                        <button
+                          key={preset.id}
+                          onClick={() => applyPreset(preset)}
+                          className="btn-graphite p-3.5 rounded-2xl text-left flex flex-col justify-between h-22 hover:border-[#EEEEED]/40 transition-all"
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-bold text-[#EEEEED]">
+                              {preset.name}
+                            </span>
+                            <div 
+                              className="w-4 h-4 rounded-full border border-white/20 shadow-sm"
+                              style={{ backgroundColor: preset.dotsColor }}
+                            />
+                          </div>
+                          <span className="text-[10px] text-[#a3a3a3] capitalize">
+                            {preset.dotsType}
                           </span>
-                          <div 
-                            className="w-4 h-4 rounded-full border border-white/20 shadow-sm"
-                            style={{ backgroundColor: preset.dotsColor }}
-                          />
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Quick Preset Fine-Tuning Section */}
+                    <div className="pt-3 border-t border-[#3A3A3A] space-y-3">
+                      <label className="text-xs font-bold text-[#EEEEED] uppercase tracking-wider block">
+                        Quick Preset Fine-Tuning
+                      </label>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {/* Quick Dots Color */}
+                        <div>
+                          <span className="text-[11px] text-[#a3a3a3] font-medium block mb-1">Dots Accent</span>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="color"
+                              value={dotsColor}
+                              onChange={(e) => {
+                                setDotsColor(e.target.value);
+                                setCornersSquareColor(e.target.value);
+                                setCornersDotColor(e.target.value);
+                              }}
+                              className="w-8 h-8 rounded-lg cursor-pointer border-0 bg-transparent"
+                            />
+                            <input
+                              type="text"
+                              value={dotsColor}
+                              onChange={(e) => setDotsColor(e.target.value)}
+                              className="graphite-input flex-1 px-2.5 py-1.5 rounded-xl text-xs font-mono uppercase"
+                            />
+                          </div>
                         </div>
-                        <span className="text-[10px] text-[#a3a3a3] capitalize">
-                          {preset.dotsType}
-                        </span>
-                      </button>
-                    ))}
+
+                        {/* Quick Background Color */}
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-[11px] text-[#a3a3a3] font-medium">Background</span>
+                            <label className="flex items-center gap-1 text-[10px] text-[#a3a3a3] cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={isTransparentBg}
+                                onChange={(e) => setIsTransparentBg(e.target.checked)}
+                                className="rounded border-[#3A3A3A] bg-[#080705] text-[#EEEEED]"
+                              />
+                              <span>Clear</span>
+                            </label>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="color"
+                              disabled={isTransparentBg}
+                              value={bgColor}
+                              onChange={(e) => setBgColor(e.target.value)}
+                              className="w-8 h-8 rounded-lg cursor-pointer border-0 bg-transparent disabled:opacity-30"
+                            />
+                            <input
+                              type="text"
+                              disabled={isTransparentBg}
+                              value={bgColor}
+                              onChange={(e) => setBgColor(e.target.value)}
+                              className="graphite-input flex-1 px-2.5 py-1.5 rounded-xl text-xs font-mono uppercase disabled:opacity-30"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Quick Pattern Style */}
+                      <div>
+                        <span className="text-[11px] text-[#a3a3a3] font-medium block mb-1.5">Pattern Style</span>
+                        <div className="grid grid-cols-5 gap-1.5">
+                          {[
+                            { id: 'rounded', label: 'Rounded' },
+                            { id: 'dots', label: 'Dots' },
+                            { id: 'classy', label: 'Classy' },
+                            { id: 'classy-rounded', label: 'Smooth' },
+                            { id: 'square', label: 'Square' },
+                          ].map((style) => (
+                            <button
+                              key={style.id}
+                              onClick={() => setDotsType(style.id as any)}
+                              className={`py-1.5 px-1 rounded-xl text-[10px] font-semibold text-center truncate transition-all ${
+                                dotsType === style.id ? 'graphite-pill-active' : 'graphite-pill'
+                              }`}
+                            >
+                              {style.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
 
