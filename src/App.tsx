@@ -43,7 +43,7 @@ import {
 import { ExportResolutionSelect, EXPORT_RESOLUTIONS } from './components/ExportResolutionSelect';
 import { normalizeUrlInput } from './utils/urlNormalizer';
 import { BackgroundRippleEffect } from './components/ui/background-ripple-effect';
-import { PrintQRCard } from './components/PrintQRCard';
+import { PrintCardModal } from './components/PrintCardModal';
 
 type MainView = 'create' | 'scan' | 'history';
 type ContentType = 'url' | 'text' | 'wifi' | 'vcard' | 'event' | 'email' | 'phone' | 'whatsapp';
@@ -212,6 +212,7 @@ const App = () => {
 
   // UI Toast States
   const [customizerTab, setCustomizerTab] = useState<CustomizerTab>('presets');
+  const [showPrintModal, setShowPrintModal] = useState<boolean>(false);
   const [copiedState, setCopiedState] = useState<boolean>(false);
   const [copiedImageState, setCopiedImageState] = useState<boolean>(false);
   const [exportFormat, setExportFormat] = useState<ExportFormat>('png');
@@ -734,7 +735,7 @@ const App = () => {
       alert('Please enter a valid URL or content before printing the QR card.');
       return;
     }
-    window.print();
+    setShowPrintModal(true);
   };
 
   // Apply Color Palette Preset
@@ -2081,8 +2082,10 @@ const App = () => {
       </footer>
       </div>
 
-      {/* Dedicated Physical Printable Card Component (Hidden on web, visible only during window.print()) */}
-      <PrintQRCard
+      {/* Dedicated Physical Printable Card Preview Modal & Print Representation */}
+      <PrintCardModal
+        isOpen={showPrintModal}
+        onClose={() => setShowPrintModal(false)}
         contentType={contentType}
         data={getEncodedData().data}
         dotsColor={dotsColor}
