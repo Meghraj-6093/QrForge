@@ -43,6 +43,7 @@ import {
 } from './utils/qrLogoEngine';
 import { ExportResolutionSelect, EXPORT_RESOLUTIONS } from './components/ExportResolutionSelect';
 import { normalizeUrlInput } from './utils/urlNormalizer';
+import { BackgroundRippleEffect } from './components/ui/background-ripple-effect';
 
 type MainView = 'create' | 'scan' | 'history';
 type ContentType = 'url' | 'text' | 'wifi' | 'vcard' | 'event' | 'email' | 'phone' | 'whatsapp';
@@ -703,28 +704,34 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen palette-bg text-[#EEEEED] flex flex-col justify-between selection:bg-white/20">
+    <div className="relative min-h-screen palette-bg text-[#EEEEED] selection:bg-white/20 overflow-hidden">
       
-      {/* Full-Page Drag & Drop Overlay */}
-      {isDraggingPage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-8 bg-[#080705]/95 backdrop-blur-xl border-4 border-dashed border-[#EEEEED]/60 file-upload-grid transition-all animate-fadeIn">
-          <div className="flex flex-col items-center justify-center space-y-6 text-center pointer-events-none">
-            <div className="w-24 h-24 rounded-3xl bg-[#3A3A3A]/60 border border-[#3A3A3A] backdrop-blur-md flex items-center justify-center shadow-2xl scale-110 animate-bounce">
-              <div className="w-14 h-14 rounded-2xl border border-dashed border-[#EEEEED]/60 flex items-center justify-center bg-[#080705]">
-                <Upload className="w-8 h-8 text-[#EEEEED]" />
+      {/* Ambient Interactive Ripple Background Layer */}
+      <BackgroundRippleEffect />
+
+      {/* Main Application UI Layer */}
+      <div className="relative z-10 flex flex-col justify-between min-h-screen">
+        
+        {/* Full-Page Drag & Drop Overlay */}
+        {isDraggingPage && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-8 bg-[#080705]/95 backdrop-blur-xl border-4 border-dashed border-[#EEEEED]/60 file-upload-grid transition-all animate-fadeIn">
+            <div className="flex flex-col items-center justify-center space-y-6 text-center pointer-events-none">
+              <div className="w-24 h-24 rounded-3xl bg-[#3A3A3A]/60 border border-[#3A3A3A] backdrop-blur-md flex items-center justify-center shadow-2xl scale-110 animate-bounce">
+                <div className="w-14 h-14 rounded-2xl border border-dashed border-[#EEEEED]/60 flex items-center justify-center bg-[#080705]">
+                  <Upload className="w-8 h-8 text-[#EEEEED]" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <h2 className="text-2xl font-extrabold text-[#EEEEED]">
+                  Drop file anywhere to upload
+                </h2>
+                <p className="text-sm text-[#a3a3a3]">
+                  {activeView === 'scan' ? 'Release to decode QR Code image' : 'Release to set as QR Logo'}
+                </p>
               </div>
             </div>
-            <div className="space-y-2">
-              <h2 className="text-2xl font-extrabold text-[#EEEEED]">
-                Drop file anywhere to upload
-              </h2>
-              <p className="text-sm text-[#a3a3a3]">
-                {activeView === 'scan' ? 'Release to decode QR Code image' : 'Release to set as QR Logo'}
-              </p>
-            </div>
           </div>
-        </div>
-      )}
+        )}
       
       {/* Header Container */}
       <header className="sticky top-0 z-40 px-4 py-4 backdrop-blur-2xl bg-[#080705]/90 border-b border-[#3A3A3A] no-print">
@@ -1974,6 +1981,7 @@ const App = () => {
           )}
         </div>
       </footer>
+      </div>
     </div>
   );
 };
