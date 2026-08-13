@@ -1,27 +1,37 @@
-<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="192" height="192" rx="24" fill="#000000"/>
-  <rect width="192" height="192" rx="24" fill="url(#gradient)"/>
-  <path d="M48 48H144V144H48V48Z" fill="white" opacity="0.9"/>
-  <path d="M60 60H132V132H60V60Z" fill="white" opacity="0.1"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <rect width="512" height="512" rx="128" fill="#080705" />
+  <rect x="16" y="16" width="480" height="480" rx="112" fill="none" stroke="#3A3A3A" stroke-width="12" opacity="0.8"/>
+  <rect x="32" y="32" width="448" height="448" rx="96" fill="none" stroke="#EEEEED" stroke-width="2" opacity="0.15"/>
   
-  <!-- QR Pattern -->
-  <rect x="70" y="70" width="20" height="20" fill="white"/>
-  <rect x="102" y="70" width="20" height="20" fill="white"/>
-  <rect x="70" y="102" width="20" height="20" fill="white"/>
-  <rect x="102" y="102" width="20" height="20" fill="white"/>
+  <!-- Top Left Corner Square -->
+  <rect x="100" y="100" width="110" height="110" rx="28" fill="none" stroke="#EEEEED" stroke-width="20"/>
+  <rect x="133" y="133" width="44" height="44" rx="12" fill="#EEEEED"/>
+
+  <!-- Top Right Corner Square -->
+  <rect x="302" y="100" width="110" height="110" rx="28" fill="none" stroke="#EEEEED" stroke-width="20"/>
+  <rect x="335" y="133" width="44" height="44" rx="12" fill="#EEEEED"/>
+
+  <!-- Bottom Left Corner Square -->
+  <rect x="100" y="302" width="110" height="110" rx="28" fill="none" stroke="#EEEEED" stroke-width="20"/>
+  <rect x="133" y="335" width="44" height="44" rx="12" fill="#EEEEED"/>
+
+  <!-- Matrix Elements in Platinum (#EEEEED) & Graphite (#3A3A3A) -->
+  <rect x="250" y="100" width="28" height="28" rx="8" fill="#3A3A3A"/>
+  <rect x="250" y="140" width="28" height="70" rx="10" fill="#EEEEED"/>
   
-  <rect x="80" y="80" width="10" height="10" fill="#000000"/>
-  <rect x="112" y="80" width="10" height="10" fill="#000000"/>
-  <rect x="80" y="112" width="10" height="10" fill="#000000"/>
-  <rect x="112" y="112" width="10" height="10" fill="#000000"/>
-  
-  <rect x="70" y="130" width="52" height="2" fill="white"/>
-  <rect x="70" y="70" width="2" height="52" fill="white"/>
-  
-  <defs>
-    <linearGradient id="gradient" x1="0" y1="0" x2="192" y2="192" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#3b82f6"/>
-      <stop offset="1" stop-color="#8b5cf6"/>
-    </linearGradient>
-  </defs>
+  <rect x="100" y="246" width="70" height="28" rx="10" fill="#EEEEED"/>
+  <rect x="182" y="246" width="28" height="28" rx="8" fill="#3A3A3A"/>
+
+  <rect x="302" y="246" width="28" height="28" rx="8" fill="#EEEEED"/>
+  <rect x="342" y="246" width="70" height="28" rx="10" fill="#EEEEED"/>
+
+  <rect x="250" y="302" width="28" height="70" rx="10" fill="#EEEEED"/>
+  <rect x="302" y="302" width="50" height="28" rx="8" fill="#3A3A3A"/>
+  <rect x="364" y="302" width="48" height="48" rx="12" fill="#EEEEED"/>
+
+  <rect x="250" y="384" width="70" height="28" rx="10" fill="#EEEEED"/>
+  <rect x="332" y="364" width="80" height="48" rx="14" fill="#EEEEED"/>
+
+  <!-- Center Spark Accent -->
+  <path d="M 230 220 Q 230 200 210 200 Q 230 200 230 180 Q 230 200 250 200 Q 230 200 230 220 Z" fill="#EEEEED"/>
 </svg>

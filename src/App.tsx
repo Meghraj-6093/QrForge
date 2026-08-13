@@ -556,8 +556,20 @@ const App = () => {
       <header className="sticky top-0 z-40 px-4 py-4 backdrop-blur-2xl bg-[#080705]/90 border-b border-[#3A3A3A] no-print">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl btn-platinum flex items-center justify-center shadow-lg">
-              <Sparkles className="w-5 h-5 text-[#080705]" />
+            <div className="w-10 h-10 rounded-2xl bg-[#080705] border border-[#3A3A3A] flex items-center justify-center p-1.5 shadow-lg">
+              <svg viewBox="0 0 512 512" className="w-full h-full">
+                <rect x="100" y="100" width="110" height="110" rx="28" fill="none" stroke="#EEEEED" strokeWidth="24"/>
+                <rect x="133" y="133" width="44" height="44" rx="12" fill="#EEEEED"/>
+                <rect x="302" y="100" width="110" height="110" rx="28" fill="none" stroke="#EEEEED" strokeWidth="24"/>
+                <rect x="335" y="133" width="44" height="44" rx="12" fill="#EEEEED"/>
+                <rect x="100" y="302" width="110" height="110" rx="28" fill="none" stroke="#EEEEED" strokeWidth="24"/>
+                <rect x="133" y="335" width="44" height="44" rx="12" fill="#EEEEED"/>
+                <rect x="250" y="140" width="28" height="70" rx="10" fill="#EEEEED"/>
+                <rect x="342" y="246" width="70" height="28" rx="10" fill="#EEEEED"/>
+                <rect x="250" y="302" width="28" height="70" rx="10" fill="#EEEEED"/>
+                <rect x="364" y="302" width="48" height="48" rx="12" fill="#EEEEED"/>
+                <path d="M 230 220 Q 230 200 210 200 Q 230 200 230 180 Q 230 200 250 200 Q 230 200 230 220 Z" fill="#EEEEED"/>
+              </svg>
             </div>
             <div>
               <h1 className="text-xl font-extrabold tracking-tight text-[#EEEEED]">
