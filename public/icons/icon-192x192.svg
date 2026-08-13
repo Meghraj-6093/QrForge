@@ -1,0 +1,27 @@
+<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="192" height="192" rx="24" fill="#000000"/>
+  <rect width="192" height="192" rx="24" fill="url(#gradient)"/>
+  <path d="M48 48H144V144H48V48Z" fill="white" opacity="0.9"/>
+  <path d="M60 60H132V132H60V60Z" fill="white" opacity="0.1"/>
+  
+  <!-- QR Pattern -->
+  <rect x="70" y="70" width="20" height="20" fill="white"/>
+  <rect x="102" y="70" width="20" height="20" fill="white"/>
+  <rect x="70" y="102" width="20" height="20" fill="white"/>
+  <rect x="102" y="102" width="20" height="20" fill="white"/>
+  
+  <rect x="80" y="80" width="10" height="10" fill="#000000"/>
+  <rect x="112" y="80" width="10" height="10" fill="#000000"/>
+  <rect x="80" y="112" width="10" height="10" fill="#000000"/>
+  <rect x="112" y="112" width="10" height="10" fill="#000000"/>
+  
+  <rect x="70" y="130" width="52" height="2" fill="white"/>
+  <rect x="70" y="70" width="2" height="52" fill="white"/>
+  
+  <defs>
+    <linearGradient id="gradient" x1="0" y1="0" x2="192" y2="192" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3b82f6"/>
+      <stop offset="1" stop-color="#8b5cf6"/>
+    </linearGradient>
+  </defs>
+</svg>

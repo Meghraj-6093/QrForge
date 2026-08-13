@@ -1,0 +1,33 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" rx="48" fill="#000000"/>
+  <rect width="512" height="512" rx="48" fill="url(#gradient)"/>
+  <path d="M128 128H384V384H128V128Z" fill="white" opacity="0.9"/>
+  <path d="M160 160H352V352H160V160Z" fill="white" opacity="0.1"/>
+  
+  <!-- QR Pattern -->
+  <rect x="188" y="188" width="48" height="48" fill="white"/>
+  <rect x="276" y="188" width="48" height="48" fill="white"/>
+  <rect x="188" y="276" width="48" height="48" fill="white"/>
+  <rect x="276" y="276" width="48" height="48" fill="white"/>
+  
+  <rect x="204" y="204" width="24" height="24" fill="#000000"/>
+  <rect x="284" y="204" width="24" height="24" fill="#000000"/>
+  <rect x="204" y="284" width="24" height="24" fill="#000000"/>
+  <rect x="284" y="284" width="24" height="24" fill="#000000"/>
+  
+  <rect x="188" y="340" width="128" height="4" fill="white"/>
+  <rect x="188" y="188" width="4" height="128" fill="white"/>
+  
+  <!-- Decorative elements -->
+  <circle cx="160" cy="160" r="8" fill="white" opacity="0.6"/>
+  <circle cx="352" cy="160" r="8" fill="white" opacity="0.6"/>
+  <circle cx="160" cy="352" r="8" fill="white" opacity="0.6"/>
+  <circle cx="352" cy="352" r="8" fill="white" opacity="0.6"/>
+  
+  <defs>
+    <linearGradient id="gradient" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3b82f6"/>
+      <stop offset="1" stop-color="#8b5cf6"/>
+    </linearGradient>
+  </defs>
+</svg>

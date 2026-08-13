@@ -1,0 +1,41 @@
+<svg width="750" height="1334" viewBox="0 0 750 1334" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="750" height="1334" fill="#000000"/>
+  <rect width="750" height="1334" fill="url(#gradient)"/>
+  
+  <!-- Mobile frame -->
+  <rect x="25" y="100" width="700" height="1100" rx="40" fill="white" opacity="0.1"/>
+  <rect x="25" y="100" width="700" height="1100" rx="40" stroke="white" stroke-width="2" opacity="0.3"/>
+  
+  <!-- Header -->
+  <rect x="50" y="130" width="650" height="80" rx="20" fill="white" opacity="0.2"/>
+  <text x="375" y="180" text-anchor="middle" fill="white" font-size="24" font-weight="bold">QRForge</text>
+  
+  <!-- Content area -->
+  <rect x="50" y="240" width="650" height="400" rx="20" fill="white" opacity="0.1"/>
+  <rect x="50" y="240" width="650" height="400" rx="20" stroke="white" stroke-width="2" opacity="0.3" stroke-dasharray="5,5"/>
+  
+  <!-- QR Code placeholder -->
+  <rect x="250" y="300" width="250" height="250" rx="10" fill="white" opacity="0.9"/>
+  <rect x="270" y="270" width="210" height="210" fill="url(#qr-gradient)"/>
+  
+  <!-- Bottom controls -->
+  <rect x="50" y="670" width="650" height="80" rx="20" fill="white" opacity="0.2"/>
+  <circle cx="150" cy="710" r="25" fill="white" opacity="0.8"/>
+  <circle cx="375" cy="710" r="25" fill="white" opacity="0.8"/>
+  <circle cx="600" cy="710" r="25" fill="white" opacity="0.8"/>
+  
+  <!-- Footer -->
+  <rect x="50" y="1170" width="650" height="30" rx="15" fill="white" opacity="0.2"/>
+  <text x="375" y="1190" text-anchor="middle" fill="white" font-size="12">QRForge - Premium QR Generator</text>
+  
+  <defs>
+    <linearGradient id="gradient" x1="0" y1="0" x2="750" y2="1334" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3b82f6"/>
+      <stop offset="1" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="qr-gradient" x1="0" y1="0" x2="210" y2="210" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#000000"/>
+      <stop offset="1" stop-color="#333333"/>
+    </linearGradient>
+  </defs>
+</svg>

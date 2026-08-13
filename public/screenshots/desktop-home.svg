@@ -1,0 +1,55 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1920" height="1080" fill="#000000"/>
+  <rect width="1920" height="1080" fill="url(#gradient)"/>
+  
+  <!-- Desktop frame -->
+  <rect x="100" y="50" width="1720" height="980" rx="20" fill="white" opacity="0.1"/>
+  <rect x="100" y="50" width="1720" height="980" rx="20" stroke="white" stroke-width="2" opacity="0.3"/>
+  
+  <!-- Header -->
+  <rect x="150" y="80" width="1620" height="80" rx="15" fill="white" opacity="0.2"/>
+  <text x="960" y="130" text-anchor="middle" fill="white" font-size="32" font-weight="bold">QRForge Studio</text>
+  
+  <!-- Main content area -->
+  <rect x="150" y="200" width="800" height="700" rx="20" fill="white" opacity="0.1"/>
+  <text x="550" y="250" text-anchor="middle" fill="white" font-size="18">QRForge Studio</text>
+  
+  <!-- Control panel -->
+  <rect x="150" y="280" width="760" height="40" rx="10" fill="white" opacity="0.2"/>
+  <rect x="150" y="340" width="760" height="40" rx="10" fill="white" opacity="0.2"/>
+  <rect x="150" y="400" width="760" height="40" rx="10" fill="white" opacity="0.2"/>
+  <rect x="150" y="460" width="760" height="40" rx="10" fill="white" opacity="0.2"/>
+  <rect x="150" y="520" width="760" height="40" rx="10" fill="white" opacity="0.2"/>
+  
+  <!-- Preview area -->
+  <rect x="1050" y="200" width="700" height="700" rx="20" fill="white" opacity="0.1"/>
+  <text x="1400" y="250" text-anchor="middle" fill="white" font-size="18">Live Preview</text>
+  
+  <!-- QR Code -->
+  <rect x="1200" y="350" width="400" height="400" rx="15" fill="white" opacity="0.9"/>
+  <rect x="1220" y="320" width="360" height="360" fill="url(#qr-gradient)"/>
+  
+  <!-- Export buttons -->
+  <rect x="1050" y="650" width="150" height="50" rx="10" fill="white" opacity="0.2"/>
+  <rect x="1220" y="650" width="150" height="50" rx="10" fill="white" opacity="0.2"/>
+  <rect x="1390" y="650" width="150" height="50" rx="10" fill="white" opacity="0.2"/>
+  
+  <text x="1125" y="680" text-anchor="middle" fill="white" font-size="14">PNG</text>
+  <text x="1295" y="680" text-anchor="middle" fill="white" font-size="14">SVG</text>
+  <text x="1465" y="680" text-anchor="middle" fill="white" font-size="14">WebP</text>
+  
+  <!-- Footer -->
+  <rect x="150" y="950" width="1620" height="60" rx="15" fill="white" opacity="0.2"/>
+  <text x="960" y="985" text-anchor="middle" fill="white" font-size="16">QRForge - Premium QR Generator with PWA Support</text>
+  
+  <defs>
+    <linearGradient id="gradient" x1="0" y1="0" x2="1920" y2="1080" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3b82f6"/>
+      <stop offset="1" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="qr-gradient" x1="0" y1="0" x2="360" y2="360" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#000000"/>
+      <stop offset="1" stop-color="#333333"/>
+    </linearGradient>
+  </defs>
+</svg>
