@@ -39,13 +39,12 @@ export const ExportResolutionSelect: React.FC<ExportResolutionSelectProps> = ({
   // Find currently selected option object
   const currentOption = EXPORT_RESOLUTIONS.find((opt) => opt.value === value) || EXPORT_RESOLUTIONS[1];
 
-  // Handle open with smooth animation
+  // Handle open with smooth animation (150-200ms ease-out)
   const handleOpen = useCallback(() => {
-    // Determine flip direction (upward vs downward)
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
       const spaceBelow = window.innerHeight - rect.bottom;
-      const menuHeight = 220; // Approx height of listbox
+      const menuHeight = 220;
       setOpenUpward(spaceBelow < menuHeight && rect.top > menuHeight);
     }
 
@@ -54,7 +53,6 @@ export const ExportResolutionSelect: React.FC<ExportResolutionSelectProps> = ({
 
     setIsRendered(true);
     setIsOpen(true);
-    // Request animation frame to ensure DOM mounting before CSS transition starts
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         setIsAnimatingIn(true);
@@ -68,7 +66,7 @@ export const ExportResolutionSelect: React.FC<ExportResolutionSelectProps> = ({
     const timer = setTimeout(() => {
       setIsOpen(false);
       setIsRendered(false);
-    }, 150); // Matches CSS transition duration
+    }, 150);
     return () => clearTimeout(timer);
   }, []);
 
@@ -146,7 +144,7 @@ export const ExportResolutionSelect: React.FC<ExportResolutionSelectProps> = ({
       className={`relative w-full text-left ${className}`}
       onKeyDown={handleKeyDown}
     >
-      {/* Trigger Button */}
+      {/* Trigger Control */}
       <button
         ref={triggerRef}
         type="button"
@@ -175,7 +173,7 @@ export const ExportResolutionSelect: React.FC<ExportResolutionSelectProps> = ({
           role="listbox"
           tabIndex={-1}
           aria-label="Export Resolution Quality Options"
-          className={`absolute left-0 right-0 z-50 p-1.5 rounded-2xl bg-[#080705]/95 backdrop-blur-2xl border border-[#3A3A3A] shadow-2xl space-y-1 transition-all duration-150 ease-out origin-top ${
+          className={`absolute left-0 right-0 z-50 p-1.5 rounded-2xl bg-[#080705]/95 backdrop-blur-2xl border border-[#3A3A3A] shadow-2xl space-y-1 transition-all duration-150 ease-out ${
             openUpward ? 'bottom-full mb-1.5 origin-bottom' : 'top-full mt-1.5 origin-top'
           } ${
             isAnimatingIn 
@@ -196,23 +194,18 @@ export const ExportResolutionSelect: React.FC<ExportResolutionSelectProps> = ({
                 onMouseEnter={() => setFocusedIndex(index)}
                 className={`px-3.5 py-2.5 rounded-xl text-xs flex items-center justify-between cursor-pointer transition-all ${
                   isSelected
-                    ? 'btn-platinum shadow-md font-bold'
+                    ? 'bg-[#3A3A3A]/80 text-[#EEEEED] font-bold border border-[#EEEEED]/20 shadow-sm'
                     : isKeyboardFocused
-                    ? 'bg-[#3A3A3A]/70 text-[#EEEEED]'
-                    : 'text-[#a3a3a3] hover:bg-[#3A3A3A]/40 hover:text-[#EEEEED]'
+                    ? 'bg-[#3A3A3A]/50 text-[#EEEEED]'
+                    : 'text-[#a3a3a3] hover:bg-[#3A3A3A]/30 hover:text-[#EEEEED]'
                 }`}
               >
-                <div className="flex flex-col">
-                  <span className="font-semibold text-xs">
-                    {opt.label}
-                  </span>
-                  <span className={`text-[10px] font-mono ${isSelected ? 'text-[#080705]/70' : 'text-[#a3a3a3]'}`}>
-                    {opt.width} &times; {opt.height} px
-                  </span>
-                </div>
+                <span className="font-semibold text-xs">
+                  {opt.label} ({opt.width} &times; {opt.height} px)
+                </span>
 
                 {isSelected && (
-                  <Check className="w-4 h-4 text-[#080705] shrink-0 stroke-[2.5]" />
+                  <Check className="w-4 h-4 text-[#EEEEED] shrink-0 stroke-[2.5]" />
                 )}
               </div>
             );
