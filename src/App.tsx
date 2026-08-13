@@ -221,6 +221,8 @@ const App = () => {
   const previewRef = useRef<HTMLDivElement | null>(null);
   const qrInstanceRef = useRef<QRCodeStyling | null>(null);
   const isRestoringFromHistoryRef = useRef<boolean>(false);
+  const historyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const inputVersionRef = useRef<number>(0);
 
   // Catch PWA beforeinstallprompt event
   useEffect(() => {
@@ -424,12 +426,10 @@ const App = () => {
     const qrCode = new QRCodeStyling(options);
     qrInstanceRef.current = qrCode;
     qrCode.append(previewRef.current);
-
-    saveToHistory(data, contentType);
   }, [
     getEncodedData, qrSize, qrMargin, errorCorrection, logoScale,
     dotsType, dotsColor, isTransparentBg, bgColor, cornersSquareType,
-    cornersSquareColor, cornersDotType, cornersDotColor, compositeLogoUrl, saveToHistory, contentType
+    cornersSquareColor, cornersDotType, cornersDotColor, compositeLogoUrl
   ]);
 
   useEffect(() => {
@@ -437,6 +437,66 @@ const App = () => {
       updateQRCode();
     }
   }, [updateQRCode, activeView]);
+
+  // 3-Second Inactivity Debounce for History Creation
+  useEffect(() => {
+    if (historyTimerRef.current) {
+      clearTimeout(historyTimerRef.current);
+      historyTimerRef.current = null;
+    }
+
+    if (isRestoringFromHistoryRef.current || activeView !== 'create') {
+      return;
+    }
+
+    const currentVersion = ++inputVersionRef.current;
+
+    historyTimerRef.current = setTimeout(() => {
+      historyTimerRef.current = null;
+
+      if (inputVersionRef.current !== currentVersion || isRestoringFromHistoryRef.current) {
+        return;
+      }
+
+      const { data, isValid } = getEncodedData();
+      if (isValid && data && data.trim().length > 0) {
+        saveToHistory(data, contentType);
+      }
+    }, 3000);
+
+    return () => {
+      if (historyTimerRef.current) {
+        clearTimeout(historyTimerRef.current);
+        historyTimerRef.current = null;
+      }
+    };
+  }, [
+    contentType,
+    rawText,
+    wifiSSID,
+    wifiPassword,
+    wifiEncryption,
+    wifiHidden,
+    vcardFirstName,
+    vcardLastName,
+    vcardPhone,
+    vcardEmail,
+    vcardCompany,
+    vcardTitle,
+    eventTitle,
+    eventLocation,
+    eventStartDate,
+    eventEndDate,
+    eventDescription,
+    emailTo,
+    emailSubject,
+    emailBody,
+    waNumber,
+    waMessage,
+    activeView,
+    getEncodedData,
+    saveToHistory,
+  ]);
 
   // Real-time Readability & Safety Validation Report
   const safetyReport: SafetyReport = validateQRLogoSafety(

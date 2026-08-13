@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import QRCodeStyling from 'qr-code-styling';
 import { Printer, X } from 'lucide-react';
 
@@ -42,15 +42,14 @@ export const PrintCardModal: React.FC<PrintCardModalProps> = ({
   wifiSSID,
 }) => {
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
-  const cardPreviewRef = useRef<HTMLDivElement>(null);
 
-  // Pre-generate High-Resolution Data URL for 100% reliable print rendering
+  // Pre-generate High-Resolution Data URL (1600px) for razor-sharp print quality
   useEffect(() => {
     if (!isOpen || !data) return;
 
     const exportOptions = {
-      width: 1200,
-      height: 1200,
+      width: 1600,
+      height: 1600,
       type: 'canvas' as const,
       data,
       margin: qrMargin,
@@ -87,21 +86,21 @@ export const PrintCardModal: React.FC<PrintCardModalProps> = ({
   const getContextualLabel = () => {
     switch (contentType) {
       case 'url':
-        return { action: 'Scan to visit website', detail: data };
+        return { action: 'Scan to visit', detail: data };
       case 'wifi':
-        return { action: 'Wi-Fi Access Card', detail: `Network: ${wifiSSID || 'Wireless Access'}` };
+        return { action: 'Wi-Fi Access', detail: `Network: ${wifiSSID || 'Wireless Access'}` };
       case 'whatsapp':
-        return { action: 'Chat with us on WhatsApp', detail: data };
+        return { action: 'Chat with us', detail: data };
       case 'email':
-        return { action: 'Send us an Email', detail: data.replace(/^mailto:/, '') };
+        return { action: 'Email', detail: data.replace(/^mailto:/, '') };
       case 'vcard':
-        return { action: 'Save Digital Contact', detail: 'Contact Card' };
+        return { action: 'Save Contact', detail: 'Digital Contact Card' };
       case 'event':
         return { action: 'Event Details', detail: 'Calendar Event' };
       case 'phone':
-        return { action: 'Scan to Call', detail: data.replace(/^tel:/, '') };
+        return { action: 'Call', detail: data.replace(/^tel:/, '') };
       default:
-        return { action: 'Scan to view content', detail: data };
+        return { action: 'Scan to view', detail: data };
     }
   };
 
@@ -113,15 +112,15 @@ export const PrintCardModal: React.FC<PrintCardModalProps> = ({
 
   return (
     <>
-      {/* Interactive Modal Backdrop & Card Preview (Screen Only) */}
+      {/* Interactive Modal Backdrop & Card Preview (Screen View Only) */}
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#080705]/90 backdrop-blur-xl no-print animate-fadeIn">
-        <div className="graphite-card rounded-3xl max-w-lg w-full p-6 space-y-6 shadow-2xl border border-[#3A3A3A] relative">
+        <div className="graphite-card rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl border border-[#3A3A3A] relative">
           
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-[#3A3A3A] pb-4">
+          <div className="flex items-center justify-between border-b border-[#3A3A3A] pb-3.5">
             <div className="flex items-center gap-2">
               <Printer className="w-5 h-5 text-[#EEEEED]" />
-              <h3 className="text-base font-bold text-[#EEEEED]">Printable QR Card Preview</h3>
+              <h3 className="text-base font-bold text-[#EEEEED]">Printable Physical Card</h3>
             </div>
             <button
               onClick={onClose}
@@ -132,14 +131,12 @@ export const PrintCardModal: React.FC<PrintCardModalProps> = ({
           </div>
 
           {/* Centered Printable Physical Card Display */}
-          <div className="flex justify-center py-2">
-            <div 
-              ref={cardPreviewRef}
-              className="w-[340px] max-w-full bg-white text-black p-7 rounded-3xl border border-neutral-300 shadow-2xl flex flex-col items-center justify-center text-center space-y-5"
-            >
-              {/* Card Header Logo */}
-              <div className="flex items-center gap-2 border-b border-neutral-100 pb-3.5 w-full justify-center">
-                <div className="w-7 h-7 rounded-xl bg-black flex items-center justify-center p-1">
+          <div className="flex justify-center py-1">
+            <div className="w-[360px] max-w-full bg-white text-black p-7 rounded-3xl border border-neutral-200 shadow-md flex flex-col items-center justify-center text-center space-y-5">
+              
+              {/* Card Header Brand Logo */}
+              <div className="flex items-center gap-2 border-b border-neutral-100 pb-3 w-full justify-center">
+                <div className="w-6 h-6 rounded-lg bg-black flex items-center justify-center p-1">
                   <svg viewBox="0 0 512 512" className="w-full h-full">
                     <rect x="100" y="100" width="110" height="110" rx="28" fill="none" stroke="#FFFFFF" strokeWidth="24"/>
                     <rect x="133" y="133" width="44" height="44" rx="12" fill="#FFFFFF"/>
@@ -153,30 +150,30 @@ export const PrintCardModal: React.FC<PrintCardModalProps> = ({
                     <rect x="364" y="302" width="48" height="48" rx="12" fill="#FFFFFF"/>
                   </svg>
                 </div>
-                <span className="text-base font-black tracking-tight text-black">QRForge</span>
+                <span className="text-sm font-black tracking-tight text-black">QRForge</span>
               </div>
 
-              {/* Rendered High Resolution QR Image */}
-              <div className="p-3 rounded-2xl bg-white border border-neutral-100 flex items-center justify-center">
+              {/* Dedicated Outer QR Container Shell (Rounded Outer Border, Intact Square QR) */}
+              <div className="p-5 rounded-2xl bg-white border border-neutral-200 shadow-sm flex items-center justify-center">
                 {qrDataUrl ? (
                   <img 
                     src={qrDataUrl} 
                     alt="Printable QR Code" 
-                    className="w-[240px] h-[240px] object-contain"
+                    className="w-[250px] h-[250px] object-contain"
                   />
                 ) : (
-                  <div className="w-[240px] h-[240px] flex items-center justify-center text-xs text-neutral-400">
+                  <div className="w-[250px] h-[250px] flex items-center justify-center text-xs text-neutral-400">
                     Generating High-Res Print Card...
                   </div>
                 )}
               </div>
 
-              {/* Contextual Action Label & Detail */}
-              <div className="space-y-1 w-full">
+              {/* Contextual Action Label & Destination Text */}
+              <div className="space-y-1 w-full pt-1">
                 <p className="text-[11px] font-extrabold uppercase tracking-wider text-neutral-500">
                   {action}
                 </p>
-                <p className="text-xs font-mono font-semibold text-black truncate max-w-full px-2">
+                <p className="text-xs font-mono font-semibold text-neutral-900 break-all max-w-full px-2">
                   {detail}
                 </p>
               </div>
@@ -195,7 +192,7 @@ export const PrintCardModal: React.FC<PrintCardModalProps> = ({
             <button
               onClick={handleTriggerBrowserPrint}
               disabled={!qrDataUrl}
-              className="btn-platinum px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 disabled:opacity-50"
+              className="btn-platinum px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 disabled:opacity-50 cursor-pointer"
             >
               <Printer className="w-4 h-4 text-[#080705]" />
               <span>Print Physical Card</span>
@@ -207,9 +204,11 @@ export const PrintCardModal: React.FC<PrintCardModalProps> = ({
 
       {/* Print-Only Representation (Visible ONLY during window.print()) */}
       <div className="print-only-card hidden print:flex flex-col items-center justify-center min-h-screen bg-white text-black p-8 text-center font-sans">
-        <div className="w-[420px] max-w-full p-8 rounded-3xl border-2 border-neutral-200 bg-white shadow-none flex flex-col items-center justify-center space-y-6">
+        <div className="w-[420px] max-w-full p-9 rounded-3xl border border-neutral-200 bg-white shadow-none flex flex-col items-center justify-center space-y-6">
+          
+          {/* Card Header Brand Logo */}
           <div className="flex items-center gap-2 border-b border-neutral-100 pb-4 w-full justify-center">
-            <div className="w-8 h-8 rounded-xl bg-black flex items-center justify-center p-1">
+            <div className="w-7 h-7 rounded-lg bg-black flex items-center justify-center p-1">
               <svg viewBox="0 0 512 512" className="w-full h-full">
                 <rect x="100" y="100" width="110" height="110" rx="28" fill="none" stroke="#FFFFFF" strokeWidth="24"/>
                 <rect x="133" y="133" width="44" height="44" rx="12" fill="#FFFFFF"/>
@@ -223,10 +222,11 @@ export const PrintCardModal: React.FC<PrintCardModalProps> = ({
                 <rect x="364" y="302" width="48" height="48" rx="12" fill="#FFFFFF"/>
               </svg>
             </div>
-            <span className="text-lg font-black tracking-tight text-black">QRForge</span>
+            <span className="text-base font-black tracking-tight text-black">QRForge</span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-white border border-neutral-100 flex items-center justify-center">
+          {/* Dedicated Outer QR Container Shell (Rounded Outer Border, Intact Square QR) */}
+          <div className="p-6 rounded-2xl bg-white border border-neutral-200 flex items-center justify-center">
             {qrDataUrl && (
               <img 
                 src={qrDataUrl} 
@@ -236,11 +236,12 @@ export const PrintCardModal: React.FC<PrintCardModalProps> = ({
             )}
           </div>
 
-          <div className="space-y-1 w-full pt-2">
+          {/* Contextual Action Label & Destination Text */}
+          <div className="space-y-1 w-full pt-1">
             <p className="text-xs font-extrabold uppercase tracking-wider text-neutral-500">
               {action}
             </p>
-            <p className="text-xs font-mono font-semibold text-black truncate max-w-full px-2">
+            <p className="text-xs font-mono font-semibold text-neutral-900 break-all max-w-full px-2">
               {detail}
             </p>
           </div>
