@@ -1608,23 +1608,45 @@ const App = () => {
 
             {/* Right Column: Live Preview (5 cols) */}
             <div className="lg:col-span-5 lg:sticky lg:top-24 space-y-6 no-print">
-              <div className="graphite-card rounded-3xl p-6 sm:p-8 flex flex-col items-center justify-center text-center space-y-6">
+              <div className="graphite-card rounded-3xl p-6 sm:p-7 flex flex-col items-center justify-center text-center space-y-5">
                 
                 <div className="w-full flex items-center justify-between">
                   <span className="text-xs font-bold uppercase tracking-widest text-[#a3a3a3]">
                     Live Preview
                   </span>
                   <span className="text-[10px] font-mono font-medium px-2.5 py-1 rounded-full bg-[#3A3A3A]/40 text-[#EEEEED] border border-[#3A3A3A]">
-                    {exportSize} x {exportSize} px
+                    {exportSize} &times; {exportSize} px
                   </span>
                 </div>
 
                 {/* Canvas Container */}
-                <div className="relative p-6 rounded-3xl bg-[#080705] border border-[#3A3A3A] shadow-2xl flex items-center justify-center min-h-[300px] w-[320px] max-w-full">
+                <div className="relative p-6 rounded-3xl bg-[#080705] border border-[#3A3A3A] shadow-2xl flex items-center justify-center min-h-[320px] w-[340px] sm:w-[360px] max-w-full">
                   <div 
                     ref={previewRef} 
                     className="w-full h-full flex items-center justify-center"
                   />
+                </div>
+
+                {/* Payload Metadata Summary Bar */}
+                <div className="w-full text-left bg-[#181818]/80 border border-[#3A3A3A] rounded-2xl p-3.5 flex items-center justify-between text-xs gap-2">
+                  <div className="flex flex-col truncate">
+                    <div className="flex items-center gap-1.5 font-bold text-[#EEEEED] capitalize">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span>{contentType} Payload</span>
+                    </div>
+                    <span className="text-[10px] font-mono text-[#a3a3a3] truncate mt-0.5">
+                      {getEncodedData()}
+                    </span>
+                  </div>
+
+                  <button
+                    onClick={() => setActiveView('scan')}
+                    className="btn-graphite px-3 py-1.5 rounded-xl text-[11px] font-semibold flex items-center gap-1 shrink-0 hover:border-[#EEEEED]/40"
+                    title="Test-scan payload in Scanner"
+                  >
+                    <Scan className="w-3.5 h-3.5 text-[#EEEEED]" />
+                    <span>Test QR</span>
+                  </button>
                 </div>
 
                 {/* Readability & Safety Validation Panel */}
