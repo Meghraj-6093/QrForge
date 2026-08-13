@@ -196,6 +196,7 @@ const App = () => {
   const [copiedState, setCopiedState] = useState<boolean>(false);
   const [copiedImageState, setCopiedImageState] = useState<boolean>(false);
   const [exportFormat, setExportFormat] = useState<ExportFormat>('png');
+  const [isDraggingPage, setIsDraggingPage] = useState<boolean>(false);
 
   const previewRef = useRef<HTMLDivElement | null>(null);
   const qrInstanceRef = useRef<QRCodeStyling | null>(null);
@@ -501,36 +502,112 @@ const App = () => {
   };
 
   // QR Code Image Upload & Decoder for Reader Tab
+  const decodeQRFromDataUrl = useCallback((imgDataUrl: string) => {
+    setScanError(null);
+    setScannedResult(null);
+
+    const img = new Image();
+    img.onload = async () => {
+      if ('BarcodeDetector' in window) {
+        try {
+          const detector = new (window as any).BarcodeDetector({ formats: ['qr_code'] });
+          const barcodes = await detector.detect(img);
+          if (barcodes && barcodes.length > 0) {
+            setScannedResult(barcodes[0].rawValue);
+            return;
+          }
+        } catch (err) {
+          console.log('BarcodeDetector error', err);
+        }
+      }
+      setScanError('Could not find a valid QR Code in this image. Please try a clearer QR code image.');
+    };
+    img.src = imgDataUrl;
+  }, []);
+
   const handleScanImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setScanError(null);
-    setScannedResult(null);
-
     const reader = new FileReader();
-    reader.onload = async (event) => {
-      const imgDataUrl = event.target?.result as string;
-      const img = new Image();
-      img.onload = async () => {
-        if ('BarcodeDetector' in window) {
-          try {
-            const detector = new (window as any).BarcodeDetector({ formats: ['qr_code'] });
-            const barcodes = await detector.detect(img);
-            if (barcodes && barcodes.length > 0) {
-              setScannedResult(barcodes[0].rawValue);
-              return;
-            }
-          } catch (err) {
-            console.log('BarcodeDetector error', err);
-          }
-        }
-        setScanError('Could not find a valid QR Code in this image. Please try a clearer QR code image.');
-      };
-      img.src = imgDataUrl;
+    reader.onload = (event) => {
+      decodeQRFromDataUrl(event.target?.result as string);
     };
     reader.readAsDataURL(file);
   };
+
+  // Global Full-Page File Drop Handler
+  const handleGlobalFileDrop = useCallback((file: File) => {
+    if (!file.type.startsWith('image/')) {
+      alert('Please drop an image file (PNG, JPG, SVG, WebP)');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const dataUrl = event.target?.result as string;
+      if (activeView === 'scan') {
+        decodeQRFromDataUrl(dataUrl);
+      } else {
+        setLogoDataUrl(dataUrl);
+        setCustomizerTab('logo');
+      }
+    };
+    reader.readAsDataURL(file);
+  }, [activeView, decodeQRFromDataUrl]);
+
+  // Global Page Drag & Drop Listener
+  useEffect(() => {
+    let dragCounter = 0;
+
+    const handleDragEnter = (e: DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dragCounter++;
+      if (e.dataTransfer && e.dataTransfer.types.includes('Files')) {
+        setIsDraggingPage(true);
+      }
+    };
+
+    const handleDragLeave = (e: DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dragCounter--;
+      if (dragCounter <= 0) {
+        dragCounter = 0;
+        setIsDraggingPage(false);
+      }
+    };
+
+    const handleDragOver = (e: DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
+    const handleDrop = (e: DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dragCounter = 0;
+      setIsDraggingPage(false);
+
+      const files = e.dataTransfer?.files;
+      if (files && files.length > 0) {
+        handleGlobalFileDrop(files[0]);
+      }
+    };
+
+    window.addEventListener('dragenter', handleDragEnter);
+    window.addEventListener('dragleave', handleDragLeave);
+    window.addEventListener('dragover', handleDragOver);
+    window.addEventListener('drop', handleDrop);
+
+    return () => {
+      window.removeEventListener('dragenter', handleDragEnter);
+      window.removeEventListener('dragleave', handleDragLeave);
+      window.removeEventListener('dragover', handleDragOver);
+      window.removeEventListener('drop', handleDrop);
+    };
+  }, [handleGlobalFileDrop]);
 
   // Print QR Card
   const handlePrint = () => {
@@ -551,6 +628,27 @@ const App = () => {
 
   return (
     <div className="min-h-screen palette-bg text-[#EEEEED] flex flex-col justify-between selection:bg-white/20">
+      
+      {/* Full-Page Drag & Drop Overlay */}
+      {isDraggingPage && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-8 bg-[#080705]/95 backdrop-blur-xl border-4 border-dashed border-[#EEEEED]/60 file-upload-grid transition-all animate-fadeIn">
+          <div className="flex flex-col items-center justify-center space-y-6 text-center pointer-events-none">
+            <div className="w-24 h-24 rounded-3xl bg-[#3A3A3A]/60 border border-[#3A3A3A] backdrop-blur-md flex items-center justify-center shadow-2xl scale-110 animate-bounce">
+              <div className="w-14 h-14 rounded-2xl border border-dashed border-[#EEEEED]/60 flex items-center justify-center bg-[#080705]">
+                <Upload className="w-8 h-8 text-[#EEEEED]" />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-2xl font-extrabold text-[#EEEEED]">
+                Drop file anywhere to upload
+              </h2>
+              <p className="text-sm text-[#a3a3a3]">
+                {activeView === 'scan' ? 'Release to decode QR Code image' : 'Release to set as QR Logo'}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
       
       {/* Header Container */}
       <header className="sticky top-0 z-40 px-4 py-4 backdrop-blur-2xl bg-[#080705]/90 border-b border-[#3A3A3A] no-print">
