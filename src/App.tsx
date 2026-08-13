@@ -820,7 +820,7 @@ const App = () => {
         
         {/* VIEW 1: QR Creator */}
         {activeView === 'create' && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
             
             {/* Left Column: Generator Inputs & Customizers (7 cols) */}
             <div className="lg:col-span-7 space-y-6">
@@ -1607,8 +1607,8 @@ const App = () => {
             </div>
 
             {/* Right Column: Live Preview (5 cols) */}
-            <div className="lg:col-span-5 lg:sticky lg:top-24 space-y-6 no-print">
-              <div className="graphite-card rounded-3xl p-6 sm:p-7 flex flex-col items-center justify-center text-center space-y-5">
+            <div className="lg:col-span-5 lg:sticky lg:top-24 flex flex-col h-full space-y-6 no-print">
+              <div className="graphite-card rounded-3xl p-6 sm:p-7 flex flex-col items-center justify-between text-center space-y-5 flex-1 w-full">
                 
                 <div className="w-full flex items-center justify-between">
                   <span className="text-xs font-bold uppercase tracking-widest text-[#a3a3a3]">
