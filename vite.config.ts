@@ -8,4 +8,9 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    headers: {
+      'Cache-Control': 'no-store, no-cache, must-revalidate',
+    },
+  },
 })
